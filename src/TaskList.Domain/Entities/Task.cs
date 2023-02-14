@@ -1,4 +1,4 @@
-namespace TaskList.Domain;
+namespace TaskList.Domain.Entities;
 
 public class Task
 {
