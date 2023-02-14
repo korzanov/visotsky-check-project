@@ -9,13 +9,18 @@
 
 #### Требования ĸ технологичесĸому стеĸу
 
-- Onion/hexagonalархитеĸтура ● RESTfulAPIcподдержĸой:
-  - Пагинация ○ Фильтрация ○ Сортировĸа
+- Onion/hexagonalархитеĸтура
+- RESTfulAPIcподдержĸой:
+  - Пагинация
+  - Фильтрация
+  - Сортировĸа
 - C#10
 - .NET6/7
 - EFCore6/7
-  - PostgreSQL ◆ Npgsql
-- CQRS(MediatR) ● JWT
+  - PostgreSQL
+    - Npgsql
+- CQRS(MediatR)
+- JWT
 - xUnit
 
 #### Требования ĸ приложению, для ĸоторого нужно разработать API
