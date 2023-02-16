@@ -1,0 +1,44 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_instance
+    image: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      pg_web_app:
+        ipv4_address: 172.25.0.3
+    restart: always
+    
+  task_list_api:
+    container_name: task_list_api_instance
+    depends_on:
+      - postgres
+    build:
+      context: ../.
+      dockerfile: TaskList.Presentation/Dockerfile
+    image: task-list-api:latest
+    ports:
+      - "80:80"
+    networks:
+      pg_web_app:
+        ipv4_address: 172.25.0.2
+    environment:
+      - dbConnectionString=Host=172.25.0.3;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};
+    restart: always
+    
+networks:
+  pg_web_app:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+    
+volumes:
+  postgres:
