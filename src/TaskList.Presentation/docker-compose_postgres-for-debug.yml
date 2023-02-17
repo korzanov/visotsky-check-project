@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  postgres_for_debug_task_list_api:
+    container_name: postgres_for_debug_task_list_api
+    image: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres_for_debug_task_list_api:/data/postgres
+    ports:
+      - "5432:5432"
+    
+volumes:
+  postgres_for_debug_task_list_api:
