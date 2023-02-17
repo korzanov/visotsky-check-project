@@ -10,26 +10,37 @@ using TaskList.Services.Abstractions;
 namespace TaskList.Presentation.Controllers;
 
 [ApiController]
-[Route("/security/createToken")]
 public class SecurityController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
     private readonly Jwt _jwt;
-    
-    public SecurityController(IConfiguration configuration, IServiceManager serviceManager)
+    private readonly ILogger<SecurityController> _logger;
+
+    public SecurityController(IConfiguration configuration, IServiceManager serviceManager, ILogger<SecurityController> logger)
     {
         _serviceManager = serviceManager;
+        _logger = logger;
         _jwt = new Jwt(configuration);
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("/security/checkToken")]
+    public async Task<IActionResult> CheckToken()
+    {
+        return Ok();
     }
 
     [HttpPost]
     [AllowAnonymous]
+    [Route("/security/createToken")]
     public async Task<IActionResult> CreateToken([FromBody] UserAuthDto userAuth, CancellationToken cancellationToken = default)
     {
         var authResult = await _serviceManager.AuthService.AuthAsync(userAuth, cancellationToken);
         if (!authResult) 
             return Unauthorized();
         var token = _jwt.CreateAndWriteToken(userAuth);
+        _logger.LogDebug("Send new JWT token to \'{UserAuth}\'", userAuth);
         return Ok(token);
     }
 
