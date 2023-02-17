@@ -9,6 +9,7 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<ITaskService> _lazyTaskService;
     private readonly Lazy<ITaskListService> _lazyTaskListService;
     private readonly Lazy<ITaskCommentService> _lazyTaskCommentService;
+    private readonly Lazy<IAuthService> _lazyAuthService;
 
     public ServiceManager(IRepositoryManager repositoryManager)
     {
@@ -16,9 +17,11 @@ public sealed class ServiceManager : IServiceManager
         _lazyTaskService = new Lazy<ITaskService>(() => new TaskService(repositoryManager));
         _lazyTaskListService = new Lazy<ITaskListService>(() => new TaskListService(repositoryManager));
         _lazyTaskCommentService = new Lazy<ITaskCommentService>(() => new TaskCommentService(repositoryManager));
+        _lazyAuthService = new Lazy<IAuthService>(() => new AuthService(repositoryManager));
     }
 
     public IUserService UserService => _lazyUserService.Value;
+    public IAuthService AuthService => _lazyAuthService.Value;
     public ITaskService TaskService => _lazyTaskService.Value;
     public ITaskListService TaskListService => _lazyTaskListService.Value;
     public ITaskCommentService TaskCommentService => _lazyTaskCommentService.Value;
