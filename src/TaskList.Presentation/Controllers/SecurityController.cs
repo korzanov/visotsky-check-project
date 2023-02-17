@@ -39,11 +39,11 @@ public class SecurityController : ControllerBase
         var authResult = await _serviceManager.AuthService.AuthAsync(userAuth, cancellationToken);
         if (!authResult) 
             return Unauthorized();
-        var token = _jwt.CreateAndWriteToken(userAuth);
+        var token = _jwt.CreateAndWriteToken(userAuth.UserName);
         _logger.LogDebug("Send new JWT token to \'{UserAuth}\'", userAuth);
         return Ok(token);
     }
-
+    
     private class Jwt
     {
         private readonly string _issuer;
@@ -62,14 +62,14 @@ public class SecurityController : ControllerBase
             _ttl = TimeSpan.FromSeconds(ttlSeconds);
         }
 
-        internal string CreateAndWriteToken(UserAuthDto userAuth)
+        internal string CreateAndWriteToken(string userName)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("Id", Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Name, userAuth.UserName),
+                    new Claim(JwtRegisteredClaimNames.Name, userName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.Add(_ttl),
