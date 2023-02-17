@@ -46,20 +46,20 @@ public class SecurityController : ControllerBase
 
     private class Jwt
     {
-        internal readonly string Issuer;
-        internal readonly string Audience;
-        internal readonly byte[] Key;
-        internal readonly TimeSpan Ttl;
+        private readonly string _issuer;
+        private readonly string _audience;
+        private readonly byte[] _key;
+        private readonly TimeSpan _ttl;
         
         internal Jwt(IConfiguration configuration)
         {
             if (configuration is null) throw new ArgumentNullException(nameof(configuration));
-            Issuer = configuration["Jwt:Issuer"] ?? throw new NullReferenceException();
-            Audience = configuration["Jwt:Audience"] ?? throw new NullReferenceException();
-            Key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? throw new NullReferenceException());
+            _issuer = configuration["Jwt:Issuer"] ?? throw new NullReferenceException();
+            _audience = configuration["Jwt:Audience"] ?? throw new NullReferenceException();
+            _key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ?? throw new NullReferenceException());
             var ttlSecondsString = configuration["Jwt:TimeToLiveInSeconds"] ?? throw new NullReferenceException();
             var ttlSeconds = int.Parse(ttlSecondsString);
-            Ttl = TimeSpan.FromSeconds(ttlSeconds);
+            _ttl = TimeSpan.FromSeconds(ttlSeconds);
         }
 
         internal string CreateAndWriteToken(UserAuthDto userAuth)
@@ -72,11 +72,11 @@ public class SecurityController : ControllerBase
                     new Claim(JwtRegisteredClaimNames.Name, userAuth.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.Add(Ttl),
-                Issuer = Issuer,
-                Audience = Audience,
+                Expires = DateTime.UtcNow.Add(_ttl),
+                Issuer = _issuer,
+                Audience = _audience,
                 SigningCredentials = new SigningCredentials
-                (new SymmetricSecurityKey(Key),
+                (new SymmetricSecurityKey(_key),
                     SecurityAlgorithms.HmacSha512Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();
