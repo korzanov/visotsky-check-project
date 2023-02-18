@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TaskList.Contracts;
 using TaskList.Presentation.Controllers;
+using TaskList.Presentation.Tests.Helpers;
 using TaskList.Services.Abstractions;
 
 namespace TaskList.Presentation.Tests.Controllers;
@@ -17,7 +18,7 @@ public class SecurityControllerTests : BaseControllerTests<SecurityController>
         Mock<IAuthService> authServiceMock = new();
         ServiceManagerMock.Setup(manager => manager.AuthService).Returns(authServiceMock.Object);
         
-        var configuration = GetFakeConfigurationWithJwt();
+        var configuration = EnvironmentHelper.GetFakeConfigurationWithJwt();
         _controller = new SecurityController(configuration, ServiceManager, Logger);
         
         _validUserAuthDto = new UserAuthDto("admin", "admin");
@@ -29,16 +30,6 @@ public class SecurityControllerTests : BaseControllerTests<SecurityController>
         authServiceMock
             .Setup(service => service.AuthAsync(It.IsNotIn(_validUserAuthDto), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
-    }
-
-    private static IConfiguration GetFakeConfigurationWithJwt()
-    {
-        var configurationMock = new Mock<IConfiguration>();
-        configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("someIssuer");
-        configurationMock.Setup(c => c["Jwt:Audience"]).Returns("someAudience");
-        configurationMock.Setup(c => c["Jwt:Key"]).Returns("this is my custom Secret key for authentication");
-        configurationMock.Setup(c => c["Jwt:TimeToLiveInSeconds"]).Returns(200.ToString());
-        return configurationMock.Object;
     }
 
     [Fact]
