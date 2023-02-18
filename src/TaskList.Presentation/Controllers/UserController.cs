@@ -37,6 +37,6 @@ public class UserController : ControllerBase
     
     private bool IsNotCurrentUser(Guid userId)
     {
-        return Guid.TryParse(User.Identity?.Name, out var currentUserId) && userId == currentUserId;
+        return !(Guid.TryParse(User.Identity?.Name, out var currentUserId) && userId == currentUserId);
     }
 }
