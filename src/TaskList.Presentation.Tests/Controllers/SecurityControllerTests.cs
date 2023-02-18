@@ -16,23 +16,29 @@ public class SecurityControllerTests : BaseControllerTests<SecurityController>
     {
         Mock<IAuthService> authServiceMock = new();
         ServiceManagerMock.Setup(manager => manager.AuthService).Returns(authServiceMock.Object);
-        var configurationMock = new Mock<IConfiguration>();
         
-        configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("someIssuer");
-        configurationMock.Setup(c => c["Jwt:Audience"]).Returns("someAudience");
-        configurationMock.Setup(c => c["Jwt:Key"]).Returns("this is my custom Secret key for authentication");
-        configurationMock.Setup(c => c["Jwt:TimeToLiveInSeconds"]).Returns(200.ToString());
-        
-        _controller = new SecurityController(configurationMock.Object, ServiceManagerMock.Object, LoggerMock.Object);
+        var configuration = GetFakeConfigurationWithJwt();
+        _controller = new SecurityController(configuration, ServiceManager, Logger);
         
         _validUserAuthDto = new UserAuthDto("admin", "admin");
         _invalidUserAuthDto = new UserAuthDto("admin", "password");
+        
         authServiceMock
             .Setup(service => service.AuthAsync(It.IsIn(_validUserAuthDto), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         authServiceMock
             .Setup(service => service.AuthAsync(It.IsNotIn(_validUserAuthDto), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
+    }
+
+    private static IConfiguration GetFakeConfigurationWithJwt()
+    {
+        var configurationMock = new Mock<IConfiguration>();
+        configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("someIssuer");
+        configurationMock.Setup(c => c["Jwt:Audience"]).Returns("someAudience");
+        configurationMock.Setup(c => c["Jwt:Key"]).Returns("this is my custom Secret key for authentication");
+        configurationMock.Setup(c => c["Jwt:TimeToLiveInSeconds"]).Returns(200.ToString());
+        return configurationMock.Object;
     }
 
     [Fact]
