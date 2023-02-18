@@ -26,9 +26,9 @@ public class SecurityController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("/security/checkToken")]
-    public async Task<IActionResult> CheckToken()
+    public Task<IActionResult> CheckToken()
     {
-        return Ok();
+        return Task.FromResult<IActionResult>(Ok());
     }
 
     [HttpPost]
