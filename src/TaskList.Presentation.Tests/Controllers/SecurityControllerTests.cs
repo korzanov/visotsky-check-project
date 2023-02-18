@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using TaskList.Contracts;
 using TaskList.Presentation.Controllers;
 using TaskList.Presentation.Tests.Helpers;
