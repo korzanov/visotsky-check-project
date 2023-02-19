@@ -7,11 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
       <PackageReference Include="MediatR" Version="12.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TaskList.Contracts\TaskList.Contracts.csproj" />
+      <ProjectReference Include="..\TaskList.Domain\TaskList.Domain.csproj" />
     </ItemGroup>
 
 </Project>

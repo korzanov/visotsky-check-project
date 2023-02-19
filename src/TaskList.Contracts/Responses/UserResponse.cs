@@ -1,3 +1,3 @@
 namespace TaskList.Contracts.Responses;
 
-public record UserResponse();
+public record UserResponse(string Login, string? Name, string? Email);

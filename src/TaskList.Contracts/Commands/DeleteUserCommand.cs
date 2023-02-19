@@ -2,4 +2,4 @@ using MediatR;
 
 namespace TaskList.Contracts.Commands;
 
-public record DeleteUserCommand(Guid Id) : IRequest;
+public record DeleteUserCommand(string UserName) : IRequest;

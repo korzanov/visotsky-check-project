@@ -6,13 +6,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{64671214-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{1280E535-8491-482F-AE07-201C904D247B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.Persistence", "TaskList.Persistence\TaskList.Persistence.csproj", "{6EF3C21F-E92F-4CFA-993D-25B8EC3523D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.DbInfrastructure", "TaskList.DbInfrastructure\TaskList.DbInfrastructure.csproj", "{6EF3C21F-E92F-4CFA-993D-25B8EC3523D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.Presentation", "TaskList.Presentation\TaskList.Presentation.csproj", "{776E0FE4-3BE4-4B7A-9AB9-EB12FEFD8F43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.WebApi", "TaskList.WebApi\TaskList.WebApi.csproj", "{776E0FE4-3BE4-4B7A-9AB9-EB12FEFD8F43}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{841A80FE-5D58-4743-83C3-F5D0BD163444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.Presentation.Tests", "TaskList.Presentation.Tests\TaskList.Presentation.Tests.csproj", "{7F7B3EAB-0666-48F8-8FEE-B401DC7BEDE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.WebApi.Tests", "TaskList.WebApi.Tests\TaskList.WebApi.Tests.csproj", "{7F7B3EAB-0666-48F8-8FEE-B401DC7BEDE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.Contracts", "TaskList.Contracts\TaskList.Contracts.csproj", "{9C8E1D04-EC92-4550-AF52-AC329E8DB1C8}"
 EndProject
