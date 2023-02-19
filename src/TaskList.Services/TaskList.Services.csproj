@@ -7,9 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\TaskList.Contracts\TaskList.Contracts.csproj" />
-      <ProjectReference Include="..\TaskList.Domain\TaskList.Domain.csproj" />
-      <ProjectReference Include="..\TaskList.Services.Abstractions\TaskList.Services.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

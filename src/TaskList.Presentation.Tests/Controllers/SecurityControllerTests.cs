@@ -1,40 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
-using TaskList.Contracts;
+using TaskList.Contracts.Queries;
+using TaskList.Contracts.Responses;
 using TaskList.Presentation.Controllers;
 using TaskList.Presentation.Tests.Helpers;
-using TaskList.Services.Abstractions;
 
 namespace TaskList.Presentation.Tests.Controllers;
 
-public class SecurityControllerTests : BaseControllerTests<SecurityController>
+public class SecurityControllerTests : BaseControllerTests
 {
     private readonly SecurityController _controller;
-    private readonly UserAuthDto _validUserAuthDto;
-    private readonly UserAuthDto _invalidUserAuthDto;
+    
+    private readonly AuthQuery _validUserAuthQuery;
+    private readonly AuthQuery _invalidUserAuthQuery;
 
     public SecurityControllerTests()
     {
-        Mock<IAuthService> authServiceMock = new();
-        ServiceManagerMock.Setup(manager => manager.AuthService).Returns(authServiceMock.Object);
-        
         var configuration = EnvironmentHelper.GetFakeConfigurationWithJwt();
-        _controller = new SecurityController(configuration, ServiceManager, Logger);
+        _controller = new SecurityController(MediatorMock.Object, configuration);
         
-        _validUserAuthDto = new UserAuthDto("admin", "admin");
-        _invalidUserAuthDto = new UserAuthDto("admin", "password");
+        _validUserAuthQuery = new AuthQuery("admin", "admin");
+        var validUserId = new Guid("724C5832-737A-4F7A-8BF8-F115CD134D17");
         
-        authServiceMock
-            .Setup(service => service.AuthAsync(It.IsIn(_validUserAuthDto), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-        authServiceMock
-            .Setup(service => service.AuthAsync(It.IsNotIn(_validUserAuthDto), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+        _invalidUserAuthQuery = new AuthQuery("admin", "password");
+        var invalidUserId = new Guid("25195864-1D7E-4955-B616-8B76FFA5964B");
+
+        SetupMediatrMockInRequests(new AuthResponse(true, validUserId), _validUserAuthQuery);
+        SetupMediatrMockNotInRequests(new AuthResponse(false, invalidUserId), _validUserAuthQuery);
     }
 
     [Fact]
     public async void CreateToken_Ok()
     {
-        var result = await _controller.CreateToken(_validUserAuthDto);
+        var result = await _controller.CreateToken(_validUserAuthQuery);
         var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(result);
         Assert.IsType<string>(okObjectResult.Value);
     }
@@ -42,7 +39,7 @@ public class SecurityControllerTests : BaseControllerTests<SecurityController>
     [Fact]
     public async void CreateToken_Unauthorized()
     {
-        var result = await _controller.CreateToken(_invalidUserAuthDto);
+        var result = await _controller.CreateToken(_invalidUserAuthQuery);
         Assert.IsAssignableFrom<UnauthorizedResult>(result);
     }
 }

@@ -1,25 +1,23 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using TaskList.Contracts;
-using TaskList.Services.Abstractions;
+using TaskList.Contracts.Queries;
 
 namespace TaskList.Presentation.Controllers;
 
 [ApiController]
 public class SecurityController : ControllerBase
 {
-    private readonly IServiceManager _serviceManager;
     private readonly Jwt _jwt;
-    private readonly ILogger<SecurityController> _logger;
+    private readonly IMediator _mediator;
 
-    public SecurityController(IConfiguration configuration, IServiceManager serviceManager, ILogger<SecurityController> logger)
+    public SecurityController(IMediator mediator, IConfiguration configuration)
     {
-        _serviceManager = serviceManager;
-        _logger = logger;
+        _mediator = mediator;
         _jwt = new Jwt(configuration);
     }
 
@@ -34,13 +32,12 @@ public class SecurityController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [Route("/security/createToken")]
-    public async Task<IActionResult> CreateToken([FromBody] UserAuthDto userAuth, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateToken([FromBody] AuthQuery auth, CancellationToken cancellationToken = default)
     {
-        var authResult = await _serviceManager.AuthService.AuthAsync(userAuth, cancellationToken);
-        if (!authResult) 
+        var authResponse = await _mediator.Send(auth, cancellationToken);
+        if (!authResponse.Success) 
             return Unauthorized();
-        var token = _jwt.CreateAndWriteToken(userAuth.UserName);
-        _logger.LogDebug("Send new JWT token to \'{UserAuth}\'", userAuth);
+        var token = _jwt.CreateAndWriteToken(authResponse.UserId);
         return Ok(token);
     }
     
@@ -62,14 +59,13 @@ public class SecurityController : ControllerBase
             _ttl = TimeSpan.FromSeconds(ttlSeconds);
         }
 
-        internal string CreateAndWriteToken(string userName)
+        internal string CreateAndWriteToken(Guid userId)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("Id", Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Name, userName),
+                    new Claim(JwtRegisteredClaimNames.Name, userId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.Add(_ttl),

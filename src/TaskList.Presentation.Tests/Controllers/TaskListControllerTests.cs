@@ -1,39 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
-using TaskList.Contracts;
+using TaskList.Contracts.Commands;
+using TaskList.Contracts.Queries;
+using TaskList.Contracts.Responses;
 using TaskList.Presentation.Controllers;
-using TaskList.Services.Abstractions;
 
 namespace TaskList.Presentation.Tests.Controllers;
 
-public class TaskListControllerTests : BaseControllerTests<TaskListController>
+public class TaskListControllerTests : BaseControllerTests
 {
     private readonly TaskListController _controller;
 
     public TaskListControllerTests()
     {
-        Mock<ITaskListService> mock = new();
-        ServiceManagerMock.Setup(m => m.TaskListService).Returns(mock.Object);
-        _controller = new TaskListController(ServiceManager);
+        _controller = new TaskListController(Mediator);
 
-        mock
-            .Setup(s => s.GetAllAsync(It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(Enumerable.Empty<TaskListDto>()));
-
-        mock
-            .Setup(s => s.GetByIdAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(new TaskListDto(Guid.NewGuid())));
+        var defaultTaskList = new TaskListResponse(Guid.Empty);
         
-        mock
-            .Setup(s => s.CreateAsync(It.IsAny<TaskListCreateDto>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(new TaskListDto(Guid.NewGuid())));
-        
-        mock
-            .Setup(s => s.UpdateAsync(It.IsAny<Guid>(), It.IsAny<TaskListUpdateDto>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
-        
-        mock
-            .Setup(s => s.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
+        SetupMediatrMockAnyRequest<GetTaskListsQuery, IEnumerable<TaskListResponse>>(Enumerable.Empty<TaskListResponse>());
+        SetupMediatrMockAnyRequest<GetTaskListQuery, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CreateTaskListCommand, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<UpdateTaskListCommand, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<DeleteTaskListCommand>();
     }
 
     [Fact]
@@ -42,7 +29,7 @@ public class TaskListControllerTests : BaseControllerTests<TaskListController>
         var result = await _controller.GetTaskLists();
         
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.IsAssignableFrom<IEnumerable<TaskListDto>>(ok.Value);
+        Assert.IsAssignableFrom<IEnumerable<TaskListResponse>>(ok.Value);
     }
 
     [Fact]
@@ -51,24 +38,26 @@ public class TaskListControllerTests : BaseControllerTests<TaskListController>
         var result = await _controller.GetTaskList(Guid.NewGuid());
         
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.IsAssignableFrom<TaskListDto>(ok.Value);
+        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
     }
 
     [Fact]
     public async void Create_Success()
     {
-        var result = await _controller.CreateTaskList(new TaskListCreateDto());
+        var result = await _controller.CreateTaskList(new CreateTaskListCommand());
         
         var ok = Assert.IsType<CreatedAtActionResult>(result);
-        Assert.IsAssignableFrom<TaskListDto>(ok.Value);
+        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
     }
 
     [Fact]
     public async void Update_Success()
     {
-        var result = await _controller.UpdateTaskList(Guid.NewGuid(), new TaskListUpdateDto());
+        var id = Guid.NewGuid();
+        var result = await _controller.UpdateTaskList(new UpdateTaskListCommand(id));
         
-        Assert.IsType<NoContentResult>(result);
+        var ok = Assert.IsType<AcceptedAtActionResult>(result);
+        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
     }
     
     [Fact]

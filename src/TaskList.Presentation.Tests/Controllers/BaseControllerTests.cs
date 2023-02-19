@@ -1,19 +1,37 @@
-using Microsoft.Extensions.Logging;
-using TaskList.Services.Abstractions;
+using MediatR;
 
 namespace TaskList.Presentation.Tests.Controllers;
 
-public abstract class BaseControllerTests<T>
+public abstract class BaseControllerTests
 {
-    private readonly Mock<ILogger<T>> _loggerMock;
-    protected readonly Mock<IServiceManager> ServiceManagerMock;
+    protected readonly Mock<IMediator> MediatorMock= new();
+    protected IMediator Mediator => MediatorMock.Object;
 
-    protected ILogger<T> Logger => _loggerMock.Object;
-    protected IServiceManager ServiceManager => ServiceManagerMock.Object;
-    
-    protected BaseControllerTests()
+    protected void SetupMediatrMockAnyRequest<TRequest>() where TRequest : IRequest
     {
-        _loggerMock = new Mock<ILogger<T>>();
-        ServiceManagerMock = new Mock<IServiceManager>();
+        MediatorMock
+            .Setup(m => m.Send(It.IsAny<TRequest>(), It.IsAny<CancellationToken>()))
+            .Returns(Unit.Task);
+    }
+    
+    protected void SetupMediatrMockAnyRequest<TRequest, TResponse>(TResponse response) where TRequest : IRequest<TResponse>
+    {
+        MediatorMock
+            .Setup(m => m.Send(It.IsAny<TRequest>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.FromResult(response));
+    }
+    
+    protected void SetupMediatrMockInRequests<TRequest, TResponse>(TResponse response, params TRequest[] requests) where TRequest : IRequest<TResponse>
+    {
+        MediatorMock
+            .Setup(m => m.Send(It.IsIn(requests), It.IsAny<CancellationToken>()))
+            .Returns(Task.FromResult(response));
+    }
+    
+    protected void SetupMediatrMockNotInRequests<TRequest, TResponse>(TResponse response, params TRequest[] requests) where TRequest : IRequest<TResponse>
+    {
+        MediatorMock
+            .Setup(m => m.Send(It.IsNotIn(requests), It.IsAny<CancellationToken>()))
+            .Returns(Task.FromResult(response));
     }
 }

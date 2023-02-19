@@ -1,7 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskList.Contracts;
-using TaskList.Services.Abstractions;
+using TaskList.Contracts.Commands;
 
 namespace TaskList.Presentation.Controllers;
 
@@ -10,19 +10,19 @@ namespace TaskList.Presentation.Controllers;
 [Route("api/users")]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IMediator _mediator;
     
-    public UserController(IServiceManager serviceManager)
+    public UserController(IMediator mediator)
     {
-        _userService = serviceManager.UserService;
+        _mediator = mediator;
     }
     
-    [HttpPut("{userId:guid}")]
-    public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UserUpdateDto userForUpdateDto, CancellationToken cancellationToken = default)
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser(UpdateUserCommand updateUserCommand, CancellationToken cancellationToken = default)
     {
-        if (IsNotCurrentUser(userId))
+        if (IsNotCurrentUser(updateUserCommand.Id))
             return Forbid();
-        await _userService.UpdateAsync(userId, userForUpdateDto, cancellationToken);
+        await _mediator.Send(updateUserCommand, cancellationToken);
         return NoContent();
     }
     
@@ -31,7 +31,7 @@ public class UserController : ControllerBase
     {
         if (IsNotCurrentUser(userId))
             return Forbid();
-        await _userService.DeleteAsync(userId, cancellationToken);
+        await _mediator.Send(new DeleteUserCommand(userId), cancellationToken);
         return NoContent();
     }
     

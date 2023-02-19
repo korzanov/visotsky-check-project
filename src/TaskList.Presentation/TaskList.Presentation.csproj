@@ -19,9 +19,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TaskList.Contracts\TaskList.Contracts.csproj" />
       <ProjectReference Include="..\TaskList.Persistence\TaskList.Persistence.csproj" />
-      <ProjectReference Include="..\TaskList.Services.Abstractions\TaskList.Services.Abstractions.csproj" />
       <ProjectReference Include="..\TaskList.Services\TaskList.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\..\.nuget\packages\mediatr\12.0.0\lib\netstandard2.0\MediatR.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
