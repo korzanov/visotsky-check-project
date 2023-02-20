@@ -6,6 +6,6 @@ public abstract class RegisterHelper
 {
     private RegisterHelper() { }
 
-    public static void MediatrConfigure(MediatRServiceConfiguration configuration) 
+    public static void RegisterAssembly(MediatRServiceConfiguration configuration) 
         => configuration.RegisterServicesFromAssemblyContaining<RegisterHelper>();
 }

@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(JwtBearerStartUp.SetAuthenticationOptions)
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(SwaggerStartUp.SetSwaggerOptions);
-builder.Services.AddMediatR(TaskList.Services.RegisterHelper.MediatrConfigure);
+builder.Services.AddMediatR(TaskList.Services.RegisterHelper.RegisterAssembly);
 
 var app = builder.Build();
 
