@@ -6,12 +6,13 @@ using TaskList.Domain.Repositories;
 
 namespace TaskList.Services.Handlers;
 
-public class HandlerPersonalInfoGet : IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
+public class QueryHandlersPersonalInfoGet : 
+    IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
 {
     private readonly IRepositoryPersonalInfo _repository;
     private readonly IMapper _mapper;
 
-    public HandlerPersonalInfoGet(IRepositoryPersonalInfo repository, IMapper mapper)
+    public QueryHandlersPersonalInfoGet(IRepositoryPersonalInfo repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

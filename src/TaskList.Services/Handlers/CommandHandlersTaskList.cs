@@ -33,6 +33,8 @@ public class CommandHandlersTaskList :
     public async Task<ResponseTaskList> Handle(CommandTaskListUpdate request, CancellationToken cancellationToken)
     {
         var changeTaskList = _mapper.Map<Domain.Entities.TaskList>(request);
+        var existTaskList = await _repository.GetByIdAsync(changeTaskList.Id, cancellationToken);
+        Guard.Against.NotFound(changeTaskList.Id, existTaskList, nameof(changeTaskList.Id));
         await _repository.UpdateAsync(changeTaskList, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
         var taskListResult = await _repository.GetByIdAsync(changeTaskList.Id, cancellationToken);
