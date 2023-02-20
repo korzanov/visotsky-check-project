@@ -44,20 +44,6 @@ public class SecurityController : ControllerBase
         var token = _jwt.CreateAndWriteToken(user.UserName);
         return Ok(token);
     }
-
-    [HttpPost]
-    [AllowAnonymous]
-    [Route("/security/createUser")]
-    public async Task<IActionResult> CreateUser([FromBody] QueryAuth queryAuth, CancellationToken cancellationToken = default)
-    {
-        var user = new TaskListAppUser(queryAuth.Login);
-
-        var result = await _userManager.CreateAsync(user, queryAuth.Password);
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        return Ok(queryAuth);
-    }
     
     private class Jwt
     {

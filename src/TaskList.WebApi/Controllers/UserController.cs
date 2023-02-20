@@ -30,6 +30,14 @@ public class UserController : ControllerBase
         var user = await _mediator.Send(new QueryPersonalInfoGet(login), cancellationToken);
         return Ok(user);
     }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateUser([FromBody] CommandPersonalInfoCreate personalInfoCreate, CancellationToken cancellationToken = default)
+    {
+        var user = await _mediator.Send(personalInfoCreate, cancellationToken);
+        return CreatedAtAction(nameof(UserController.GetUser),  user.Login, user);
+    }
     
     [HttpPut]
     public async Task<IActionResult> UpdateUser(CommandPersonalInfoUpdate commandPersonalInfoUpdate, CancellationToken cancellationToken = default)

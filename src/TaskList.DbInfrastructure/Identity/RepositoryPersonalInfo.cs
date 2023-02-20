@@ -37,8 +37,15 @@ public class RepositoryPersonalInfo : IRepositoryPersonalInfo
         var personalInfo = await _manager.FindByNameAsync(login);
         Guard.Against.NotFound(login, personalInfo, nameof(personalInfo));
         var result = await _manager.DeleteAsync(personalInfo);
-        if (result.Succeeded)
-            return;
-        throw new Exception(JsonSerializer.Serialize(result.Errors));
+        if (!result.Succeeded) 
+            throw new Exception(JsonSerializer.Serialize(result.Errors));
+    }
+
+    public async Task CreatePersonalInfo(string login, string password)
+    {
+        var user = new TaskListAppUser(login);
+        var result = await _manager.CreateAsync(user, password);
+        if (!result.Succeeded) 
+            throw new Exception(JsonSerializer.Serialize(result.Errors));
     }
 }

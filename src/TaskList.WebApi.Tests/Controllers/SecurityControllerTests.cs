@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
 using TaskList.DbInfrastructure.Identity;
 using TaskList.WebApi.Controllers;
