@@ -9,11 +9,11 @@ namespace TaskList.WebApi.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/taskLists")]
-public class TaskListController : ControllerBase
+public class ControllerTaskList : ControllerBase
 {
     private readonly IMediator _mediator;
     
-    public TaskListController(IMediator mediator)
+    public ControllerTaskList(IMediator mediator)
     {
         _mediator = mediator;
     }

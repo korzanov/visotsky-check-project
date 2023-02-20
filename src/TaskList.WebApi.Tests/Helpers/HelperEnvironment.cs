@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace TaskList.WebApi.Tests.Helpers;
 
-internal static class EnvironmentHelper
+internal static class HelperEnvironment
 {
     internal static IConfiguration GetFakeConfigurationWithJwt()
     {

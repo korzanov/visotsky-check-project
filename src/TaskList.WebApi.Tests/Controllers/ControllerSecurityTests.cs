@@ -8,16 +8,16 @@ using TaskList.WebApi.Tests.Helpers;
 
 namespace TaskList.WebApi.Tests.Controllers;
 
-public class SecurityControllerTests
+public class ControllerSecurityTests
 {
-    private readonly SecurityController _controller;
+    private readonly ControllerSecurity _controller;
     
     private readonly QueryAuth _validUserQueryAuth;
     private readonly QueryAuth _invalidUserQueryAuth;
 
-    public SecurityControllerTests()
+    public ControllerSecurityTests()
     {
-        var configuration = EnvironmentHelper.GetFakeConfigurationWithJwt();
+        var configuration = HelperEnvironment.GetFakeConfigurationWithJwt();
         Mock<UserManager<TaskListAppUser>> mock = new();
         
         _validUserQueryAuth = new QueryAuth("admin", "admin");
@@ -36,7 +36,7 @@ public class SecurityControllerTests
         mock.Setup(m => m.CreateAsync(It.IsAny<TaskListAppUser>(), _validUserQueryAuth.Password))
             .Returns(Task.FromResult(IdentityResult.Success));
         
-        _controller = new SecurityController(configuration, mock.Object);
+        _controller = new ControllerSecurity(configuration, mock.Object);
     }
 
     [Fact]

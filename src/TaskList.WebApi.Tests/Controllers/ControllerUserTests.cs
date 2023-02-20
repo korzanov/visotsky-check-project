@@ -8,21 +8,21 @@ using TaskList.WebApi.Tests.Helpers;
 
 namespace TaskList.WebApi.Tests.Controllers;
 
-public class UserControllerTests : BaseControllerTests
+public class ControllerUserTests : ControllerWithMediatorTests
 {
-    private readonly UserController _userController;
+    private readonly ControllerUser _controllerUser;
     private readonly string _loginOnContext;
     private readonly string _invalidLogin;
 
-    public UserControllerTests()
+    public ControllerUserTests()
     {
         Mock<UserManager<TaskListAppUser>> mock = new();
         
         _loginOnContext = "admin";
         _invalidLogin = "user";
 
-        _userController = new UserController(Mediator, mock.Object);
-        ControllerIdentityHelper.SetHttpContextWithIdentity(_userController,_loginOnContext);
+        _controllerUser = new ControllerUser(Mediator, mock.Object);
+        HelperControllerIdentity.SetHttpContextWithIdentity(_controllerUser,_loginOnContext);
 
         SetupMediatrMockAnyRequest<CommandPersonalInfoUpdate, ResponsePersonalInfo>(new Mock<ResponsePersonalInfo>().Object);
         SetupMediatrMockAnyRequest<CommandPersonalInfoDelete>();
@@ -34,7 +34,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserUpdate_Success()
     {
-        var result = await _userController.UpdateUser(new CommandPersonalInfoUpdate(_loginOnContext, "new_name", "new_email"));
+        var result = await _controllerUser.UpdateUser(new CommandPersonalInfoUpdate(_loginOnContext, "new_name", "new_email"));
         
         Assert.IsType<NoContentResult>(result);
     }
@@ -42,7 +42,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserUpdate_Forbidden()
     {
-        var result = await _userController.UpdateUser(new CommandPersonalInfoUpdate(_invalidLogin,"new_name", "new_email"));
+        var result = await _controllerUser.UpdateUser(new CommandPersonalInfoUpdate(_invalidLogin,"new_name", "new_email"));
         
         Assert.IsType<ForbidResult>(result);
     }
@@ -50,7 +50,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserDelete_Success()
     {
-        var result = await _userController.DeleteUser(_loginOnContext);
+        var result = await _controllerUser.DeleteUser(_loginOnContext);
         
         Assert.IsType<NoContentResult>(result);
     }
@@ -58,7 +58,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserDelete_Forbidden()
     {
-        var result = await _userController.DeleteUser(_invalidLogin);
+        var result = await _controllerUser.DeleteUser(_invalidLogin);
         
         Assert.IsType<ForbidResult>(result);
     }

@@ -11,12 +11,12 @@ using TaskList.DbInfrastructure.Identity;
 namespace TaskList.WebApi.Controllers;
 
 [ApiController]
-public class SecurityController : ControllerBase
+public class ControllerSecurity : ControllerBase
 {
     private readonly Jwt _jwt;
     private readonly UserManager<TaskListAppUser> _userManager;
 
-    public SecurityController(IConfiguration configuration, UserManager<TaskListAppUser> userManager)
+    public ControllerSecurity(IConfiguration configuration, UserManager<TaskListAppUser> userManager)
     {
         _userManager = userManager;
         _jwt = new Jwt(configuration);

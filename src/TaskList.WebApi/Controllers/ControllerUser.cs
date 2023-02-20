@@ -11,12 +11,12 @@ namespace TaskList.WebApi.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/users")]
-public class UserController : ControllerBase
+public class ControllerUser : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly UserManager<TaskListAppUser> _userManager;
     
-    public UserController(IMediator mediator, UserManager<TaskListAppUser> userManager)
+    public ControllerUser(IMediator mediator, UserManager<TaskListAppUser> userManager)
     {
         _mediator = mediator;
         _userManager = userManager;
@@ -36,7 +36,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> CreateUser([FromBody] CommandPersonalInfoCreate personalInfoCreate, CancellationToken cancellationToken = default)
     {
         var user = await _mediator.Send(personalInfoCreate, cancellationToken);
-        return CreatedAtAction(nameof(UserController.GetUser),  user.Login, user);
+        return CreatedAtAction(nameof(ControllerUser.GetUser),  user.Login, user);
     }
     
     [HttpPut]

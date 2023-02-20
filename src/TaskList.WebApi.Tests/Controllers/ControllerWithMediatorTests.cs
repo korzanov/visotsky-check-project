@@ -2,7 +2,7 @@ using MediatR;
 
 namespace TaskList.WebApi.Tests.Controllers;
 
-public abstract class BaseControllerTests
+public abstract class ControllerWithMediatorTests
 {
     protected readonly Mock<IMediator> MediatorMock= new();
     protected IMediator Mediator => MediatorMock.Object;

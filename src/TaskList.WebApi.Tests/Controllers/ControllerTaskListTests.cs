@@ -6,13 +6,13 @@ using TaskList.WebApi.Controllers;
 
 namespace TaskList.WebApi.Tests.Controllers;
 
-public class TaskListControllerTests : BaseControllerTests
+public class ControllerTaskListTests : ControllerWithMediatorTests
 {
-    private readonly TaskListController _controller;
+    private readonly ControllerTaskList _controller;
 
-    public TaskListControllerTests()
+    public ControllerTaskListTests()
     {
-        _controller = new TaskListController(Mediator);
+        _controller = new ControllerTaskList(Mediator);
 
         var defaultTaskList = new ResponseTaskList(Guid.Empty, null, null);
         

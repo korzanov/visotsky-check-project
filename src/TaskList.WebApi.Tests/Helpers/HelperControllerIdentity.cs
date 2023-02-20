@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TaskList.WebApi.Tests.Helpers;
 
-public class ControllerIdentityHelper
+public class HelperControllerIdentity
 {
     /// <summary>
     /// Set HttpContext with Identity to controller
