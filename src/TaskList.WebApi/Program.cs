@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using TaskList.DbInfrastructure.Data;
 using TaskList.DbInfrastructure.Identity;
 using TaskList.Domain.Repositories;
+using TaskList.WebApi.Security;
 using TaskList.WebApi.StartUps;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddIdentity<TaskListAppUser, IdentityRole>(StartUpIdentity.UseE
     .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(StartUpJwtBearer.SetAuthenticationOptions)
     .AddJwtBearer(o => StartUpJwtBearer.SetJwtBearerOptions(o, builder));
+builder.Services.AddSingleton<JwtConfig>();
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(StartUpSwagger.SetSwaggerOptions);

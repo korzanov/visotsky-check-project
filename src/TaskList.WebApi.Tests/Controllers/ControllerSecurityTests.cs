@@ -17,7 +17,6 @@ public class ControllerSecurityTests
 
     public ControllerSecurityTests()
     {
-        var configuration = HelperEnvironment.GetFakeConfigurationWithJwt();
         Mock<UserManager<TaskListAppUser>> mock = new();
         
         _validUserQueryAuth = new QueryAuth("admin", "admin");
@@ -36,7 +35,7 @@ public class ControllerSecurityTests
         mock.Setup(m => m.CreateAsync(It.IsAny<TaskListAppUser>(), _validUserQueryAuth.Password))
             .Returns(Task.FromResult(IdentityResult.Success));
         
-        _controller = new ControllerSecurity(configuration, mock.Object);
+        _controller = new ControllerSecurity(mock.Object, HelperEnvironment.GetFakeJwtConfig());
     }
 
     [Fact]

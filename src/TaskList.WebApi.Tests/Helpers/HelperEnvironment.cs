@@ -1,10 +1,13 @@
 using Microsoft.Extensions.Configuration;
+using TaskList.WebApi.Security;
 
 namespace TaskList.WebApi.Tests.Helpers;
 
 internal static class HelperEnvironment
 {
-    internal static IConfiguration GetFakeConfigurationWithJwt()
+    internal static JwtConfig GetFakeJwtConfig() => new JwtConfig(GetFakeConfigurationWithJwt());
+
+    private static IConfiguration GetFakeConfigurationWithJwt()
     {
         var configurationMock = new Mock<IConfiguration>();
         configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("someIssuer");
