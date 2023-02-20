@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<RepositoryDbContext>(DataBaseStartUp.SetConnectionString<RepositoryDbContext>);
 builder.Services.AddDbContext<TaskListIdentityDbContext>(DataBaseStartUp.SetConnectionString<TaskListIdentityDbContext>);
-builder.Services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
+builder.Services.AddScoped<IRepositoryPersonalInfo, RepositoryPersonalInfo>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped(typeof(IRepositoryReadOnly<>), typeof(EfRepository<>));
 
 builder.Services.AddIdentity<TaskListAppUser, IdentityRole>(IdentityStartUp.UseEasyPassword)
     .AddEntityFrameworkStores<TaskListIdentityDbContext>()
