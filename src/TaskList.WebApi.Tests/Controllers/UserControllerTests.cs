@@ -24,7 +24,7 @@ public class UserControllerTests : BaseControllerTests
         _userController = new UserController(Mediator, mock.Object);
         ControllerIdentityHelper.SetHttpContextWithIdentity(_userController,_loginOnContext);
 
-        SetupMediatrMockAnyRequest<CommandPersonalInfoUpdate, PersonalInfoResponse>(new Mock<PersonalInfoResponse>().Object);
+        SetupMediatrMockAnyRequest<CommandPersonalInfoUpdate, ResponsePersonalInfo>(new Mock<ResponsePersonalInfo>().Object);
         SetupMediatrMockAnyRequest<CommandPersonalInfoDelete>();
 
         mock.Setup(m => m.FindByNameAsync(It.IsAny<string>()))

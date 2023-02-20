@@ -27,7 +27,7 @@ public class UserController : ControllerBase
     {
         if (await IsNotCurrentUser(login))
             return Forbid();
-        var user = await _mediator.Send(new GetPersonalInfoQuery(login), cancellationToken);
+        var user = await _mediator.Send(new QueryPersonalInfoGet(login), cancellationToken);
         return Ok(user);
     }
     

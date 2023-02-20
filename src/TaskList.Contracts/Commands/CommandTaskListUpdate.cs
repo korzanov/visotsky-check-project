@@ -3,4 +3,4 @@ using TaskList.Contracts.Responses;
 
 namespace TaskList.Contracts.Commands;
 
-public record CommandTaskListUpdate(Guid Id, string Name, string Description) : IRequest<TaskListResponse>;
+public record CommandTaskListUpdate(Guid Id, string Name, string Description) : IRequest<ResponseTaskList>;

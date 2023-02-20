@@ -5,7 +5,7 @@ using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-public class GetPersonalInfoHandler : IRequestHandler<GetPersonalInfoQuery, PersonalInfoResponse>
+public class GetPersonalInfoHandler : IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
 {
     private readonly IPersonalInfoRepository _repository;
 
@@ -14,9 +14,9 @@ public class GetPersonalInfoHandler : IRequestHandler<GetPersonalInfoQuery, Pers
         _repository = repository;
     }
 
-    public async Task<PersonalInfoResponse> Handle(GetPersonalInfoQuery request, CancellationToken cancellationToken)
+    public async Task<ResponsePersonalInfo> Handle(QueryPersonalInfoGet request, CancellationToken cancellationToken)
     {
         var result = await _repository.GetPersonalInfo(request.Login);
-        return new PersonalInfoResponse(result.UserName, result.Name, result.Email);
+        return new ResponsePersonalInfo(result.Login, result.Name, result.Email);
     }
 }

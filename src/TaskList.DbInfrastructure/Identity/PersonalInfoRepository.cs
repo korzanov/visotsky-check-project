@@ -22,8 +22,8 @@ public class PersonalInfoRepository : IPersonalInfoRepository
 
     public async Task<IPersonalInfo> UpdatePersonalInfo(IPersonalInfo newPersonalInfo)
     {
-        var personalInfoForUpdate = await _manager.FindByNameAsync(newPersonalInfo.UserName);
-        Guard.Against.NotFound(newPersonalInfo.UserName, personalInfoForUpdate, nameof(personalInfoForUpdate));
+        var personalInfoForUpdate = await _manager.FindByNameAsync(newPersonalInfo.Login);
+        Guard.Against.NotFound(newPersonalInfo.Login, personalInfoForUpdate, nameof(personalInfoForUpdate));
         personalInfoForUpdate.Name = newPersonalInfo.Name;
         personalInfoForUpdate.Email = newPersonalInfo.Email;
         var result = await _manager.UpdateAsync(personalInfoForUpdate);

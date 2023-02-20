@@ -14,12 +14,12 @@ public class TaskListControllerTests : BaseControllerTests
     {
         _controller = new TaskListController(Mediator);
 
-        var defaultTaskList = new TaskListResponse(Guid.Empty, null, null);
+        var defaultTaskList = new ResponseTaskList(Guid.Empty, null, null);
         
-        SetupMediatrMockAnyRequest<QueryTaskListsGet, IEnumerable<TaskListResponse>>(Enumerable.Empty<TaskListResponse>());
-        SetupMediatrMockAnyRequest<QueryTaskListGet, TaskListResponse>(defaultTaskList);
-        SetupMediatrMockAnyRequest<CommandTaskListCreate, TaskListResponse>(defaultTaskList);
-        SetupMediatrMockAnyRequest<CommandTaskListUpdate, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<QueryTaskListsGet, IEnumerable<ResponseTaskList>>(Enumerable.Empty<ResponseTaskList>());
+        SetupMediatrMockAnyRequest<QueryTaskListGet, ResponseTaskList>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CommandTaskListCreate, ResponseTaskList>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CommandTaskListUpdate, ResponseTaskList>(defaultTaskList);
         SetupMediatrMockAnyRequest<CommandTaskListDelete>();
     }
 
@@ -29,7 +29,7 @@ public class TaskListControllerTests : BaseControllerTests
         var result = await _controller.GetTaskLists();
         
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.IsAssignableFrom<IEnumerable<TaskListResponse>>(ok.Value);
+        Assert.IsAssignableFrom<IEnumerable<ResponseTaskList>>(ok.Value);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class TaskListControllerTests : BaseControllerTests
         var result = await _controller.GetTaskList(Guid.NewGuid());
         
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
+        Assert.IsAssignableFrom<ResponseTaskList>(ok.Value);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class TaskListControllerTests : BaseControllerTests
         var result = await _controller.CreateTaskList(new CommandTaskListCreate(null,null));
         
         var ok = Assert.IsType<CreatedAtActionResult>(result);
-        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
+        Assert.IsAssignableFrom<ResponseTaskList>(ok.Value);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class TaskListControllerTests : BaseControllerTests
         var result = await _controller.UpdateTaskList(new CommandTaskListUpdate(id, null,null));
         
         var ok = Assert.IsType<AcceptedAtActionResult>(result);
-        Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
+        Assert.IsAssignableFrom<ResponseTaskList>(ok.Value);
     }
     
     [Fact]

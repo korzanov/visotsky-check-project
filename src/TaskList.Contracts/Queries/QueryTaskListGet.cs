@@ -3,4 +3,4 @@ using TaskList.Contracts.Responses;
 
 namespace TaskList.Contracts.Queries;
 
-public record QueryTaskListGet(Guid TaskListId) : IRequest<TaskListResponse>;
+public record QueryTaskListGet(Guid TaskListId) : IRequest<ResponseTaskList>;
