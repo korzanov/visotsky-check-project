@@ -24,6 +24,12 @@ public class ControllerTaskList : ControllerBase
         return Ok(await _mediator.Send(new QueryTaskListGetAll(), cancellationToken));
     }
 
+    [HttpGet("page/{number:int}")]
+    public async Task<IActionResult> GetTaskListsPage(int pageNumber, CancellationToken cancellationToken = default)
+    {
+        return Ok(await _mediator.Send(new QueryTaskListGetPage(pageNumber), cancellationToken));
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetTaskList(Guid id, CancellationToken cancellationToken = default)
     {
@@ -41,7 +47,7 @@ public class ControllerTaskList : ControllerBase
     public async Task<IActionResult> UpdateTaskList([FromBody] CommandTaskListUpdate commandTaskListUpdate, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(commandTaskListUpdate, cancellationToken);
-        return AcceptedAtAction(nameof(GetTaskList), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetTaskList), new { id = result.Id }, result);
     }
     
     [HttpDelete("{id:guid}")]
