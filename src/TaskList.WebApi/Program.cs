@@ -23,6 +23,7 @@ builder.Services.AddSingleton<JwtConfig>();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(StartUpSwagger.SetSwaggerOptions);
 builder.Services.AddMediatR(TaskList.Services.RegisterHelper.RegisterAssembly);
+builder.Services.AddAutoMapper(TaskList.Services.RegisterHelper.GetAssembly());
 
 var app = builder.Build();
 
