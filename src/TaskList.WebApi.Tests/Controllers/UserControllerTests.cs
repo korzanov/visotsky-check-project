@@ -24,8 +24,8 @@ public class UserControllerTests : BaseControllerTests
         _userController = new UserController(Mediator, mock.Object);
         ControllerIdentityHelper.SetHttpContextWithIdentity(_userController,_loginOnContext);
 
-        SetupMediatrMockAnyRequest<UpdateUserCommand, UserResponse>(new Mock<UserResponse>().Object);
-        SetupMediatrMockAnyRequest<DeleteUserCommand>();
+        SetupMediatrMockAnyRequest<UpdatePersonalInfoCommand, PersonalInfoResponse>(new Mock<PersonalInfoResponse>().Object);
+        SetupMediatrMockAnyRequest<DeletePersonalInfoCommand>();
 
         mock.Setup(m => m.FindByNameAsync(It.IsAny<string>()))
             .Returns(Task.FromResult(new TaskListAppUser(_loginOnContext)));
@@ -34,7 +34,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserUpdate_Success()
     {
-        var result = await _userController.UpdateUser(new UpdateUserCommand(_loginOnContext, "new_name", "new_email"));
+        var result = await _userController.UpdateUser(new UpdatePersonalInfoCommand(_loginOnContext, "new_name", "new_email"));
         
         Assert.IsType<NoContentResult>(result);
     }
@@ -42,7 +42,7 @@ public class UserControllerTests : BaseControllerTests
     [Fact]
     public async void UserUpdate_Forbidden()
     {
-        var result = await _userController.UpdateUser(new UpdateUserCommand(_invalidLogin,"new_name", "new_email"));
+        var result = await _userController.UpdateUser(new UpdatePersonalInfoCommand(_invalidLogin,"new_name", "new_email"));
         
         Assert.IsType<ForbidResult>(result);
     }

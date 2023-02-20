@@ -1,12 +1,20 @@
 using MediatR;
 using TaskList.Contracts.Commands;
+using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-public class DeleteUserHandler : IRequestHandler<DeleteUserCommand>
+public class DeleteUserHandler : IRequestHandler<DeletePersonalInfoCommand>
 {
-    public Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    private readonly IPersonalInfoRepository _repository;
+
+    public DeleteUserHandler(IPersonalInfoRepository repository)
     {
-        throw new NotImplementedException();
+        _repository = repository;
+    }
+
+    public async Task Handle(DeletePersonalInfoCommand request, CancellationToken cancellationToken)
+    {
+        await _repository.DeletePersonalIno(request.Login);
     }
 }

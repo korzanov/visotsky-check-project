@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskList.Contracts.Commands;
+using TaskList.Contracts.Queries;
 using TaskList.DbInfrastructure.Identity;
 
 namespace TaskList.WebApi.Controllers;
@@ -21,12 +22,21 @@ public class UserController : ControllerBase
         _userManager = userManager;
     }
     
-    [HttpPut]
-    public async Task<IActionResult> UpdateUser(UpdateUserCommand updateUserCommand, CancellationToken cancellationToken = default)
+    [HttpGet("{login}")]
+    public async Task<IActionResult> GetUser(string login, CancellationToken cancellationToken = default)
     {
-        if (await IsNotCurrentUser(updateUserCommand.Login))
+        if (await IsNotCurrentUser(login))
             return Forbid();
-        var user = await _mediator.Send(updateUserCommand, cancellationToken);
+        var user = await _mediator.Send(new GetPersonalInfoQuery(login), cancellationToken);
+        return Ok(user);
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser(UpdatePersonalInfoCommand updatePersonalInfoCommand, CancellationToken cancellationToken = default)
+    {
+        if (await IsNotCurrentUser(updatePersonalInfoCommand.Login))
+            return Forbid();
+        var user = await _mediator.Send(updatePersonalInfoCommand, cancellationToken);
         return Ok(user);
     }
     
@@ -35,7 +45,7 @@ public class UserController : ControllerBase
     {
         if (await IsNotCurrentUser(login))
             return Forbid();
-        await _mediator.Send(new DeleteUserCommand(login), cancellationToken);
+        await _mediator.Send(new DeletePersonalInfoCommand(login), cancellationToken);
         return NoContent();
     }
     
