@@ -16,11 +16,11 @@ public class TaskListControllerTests : BaseControllerTests
 
         var defaultTaskList = new TaskListResponse(Guid.Empty, null, null);
         
-        SetupMediatrMockAnyRequest<GetTaskListsQuery, IEnumerable<TaskListResponse>>(Enumerable.Empty<TaskListResponse>());
-        SetupMediatrMockAnyRequest<GetTaskListQuery, TaskListResponse>(defaultTaskList);
-        SetupMediatrMockAnyRequest<CreateTaskListCommand, TaskListResponse>(defaultTaskList);
-        SetupMediatrMockAnyRequest<UpdateTaskListCommand, TaskListResponse>(defaultTaskList);
-        SetupMediatrMockAnyRequest<DeleteTaskListCommand>();
+        SetupMediatrMockAnyRequest<QueryTaskListsGet, IEnumerable<TaskListResponse>>(Enumerable.Empty<TaskListResponse>());
+        SetupMediatrMockAnyRequest<QueryTaskListGet, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CommandTaskListCreate, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CommandTaskListUpdate, TaskListResponse>(defaultTaskList);
+        SetupMediatrMockAnyRequest<CommandTaskListDelete>();
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class TaskListControllerTests : BaseControllerTests
     [Fact]
     public async void Create_Success()
     {
-        var result = await _controller.CreateTaskList(new CreateTaskListCommand(null,null));
+        var result = await _controller.CreateTaskList(new CommandTaskListCreate(null,null));
         
         var ok = Assert.IsType<CreatedAtActionResult>(result);
         Assert.IsAssignableFrom<TaskListResponse>(ok.Value);
@@ -54,7 +54,7 @@ public class TaskListControllerTests : BaseControllerTests
     public async void Update_Success()
     {
         var id = Guid.NewGuid();
-        var result = await _controller.UpdateTaskList(new UpdateTaskListCommand(id, null,null));
+        var result = await _controller.UpdateTaskList(new CommandTaskListUpdate(id, null,null));
         
         var ok = Assert.IsType<AcceptedAtActionResult>(result);
         Assert.IsAssignableFrom<TaskListResponse>(ok.Value);

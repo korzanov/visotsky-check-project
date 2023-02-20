@@ -21,33 +21,33 @@ public class TaskListController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTaskLists(CancellationToken cancellationToken = default)
     {
-        return Ok(await _mediator.Send(new GetTaskListsQuery(), cancellationToken));
+        return Ok(await _mediator.Send(new QueryTaskListsGet(), cancellationToken));
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetTaskList(Guid id, CancellationToken cancellationToken = default)
     {
-        return Ok(await _mediator.Send(new GetTaskListQuery(id), cancellationToken));
+        return Ok(await _mediator.Send(new QueryTaskListGet(id), cancellationToken));
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateTaskList([FromBody] CreateTaskListCommand create, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateTaskList([FromBody] CommandTaskListCreate commandTaskListCreate, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(create, cancellationToken);
+        var result = await _mediator.Send(commandTaskListCreate, cancellationToken);
         return CreatedAtAction(nameof(GetTaskList), result.Id, result);
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateTaskList([FromBody] UpdateTaskListCommand update, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateTaskList([FromBody] CommandTaskListUpdate commandTaskListUpdate, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(update, cancellationToken);
+        var result = await _mediator.Send(commandTaskListUpdate, cancellationToken);
         return AcceptedAtAction(nameof(GetTaskList), result.Id, result);
     }
     
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteTaskList(Guid id, CancellationToken cancellationToken = default)
     {
-        await _mediator.Send(new DeleteTaskListCommand(id), cancellationToken);
+        await _mediator.Send(new CommandTaskListDelete(id), cancellationToken);
         return NoContent();
     }
 }

@@ -11,28 +11,28 @@ public class SecurityControllerTests
 {
     private readonly SecurityController _controller;
     
-    private readonly AuthQuery _validUserAuthQuery;
-    private readonly AuthQuery _invalidUserAuthQuery;
+    private readonly QueryAuth _validUserQueryAuth;
+    private readonly QueryAuth _invalidUserQueryAuth;
 
     public SecurityControllerTests()
     {
         var configuration = EnvironmentHelper.GetFakeConfigurationWithJwt();
         Mock<UserManager<TaskListAppUser>> mock = new();
         
-        _validUserAuthQuery = new AuthQuery("admin", "admin");
-        var validUser = new TaskListAppUser(_validUserAuthQuery.Login);
+        _validUserQueryAuth = new QueryAuth("admin", "admin");
+        var validUser = new TaskListAppUser(_validUserQueryAuth.Login);
         
-        _invalidUserAuthQuery = new AuthQuery("user", "password");
-        var invalidUser = new TaskListAppUser(_validUserAuthQuery.Login);
+        _invalidUserQueryAuth = new QueryAuth("user", "password");
+        var invalidUser = new TaskListAppUser(_validUserQueryAuth.Login);
 
-        mock.Setup(m => m.FindByNameAsync(It.IsIn(_validUserAuthQuery.Login)))
-            .Returns(Task.FromResult(new TaskListAppUser(_validUserAuthQuery.Login)));
+        mock.Setup(m => m.FindByNameAsync(It.IsIn(_validUserQueryAuth.Login)))
+            .Returns(Task.FromResult(new TaskListAppUser(_validUserQueryAuth.Login)));
         
-        mock.Setup(m => m.CheckPasswordAsync(It.IsIn(validUser), _validUserAuthQuery.Password))
+        mock.Setup(m => m.CheckPasswordAsync(It.IsIn(validUser), _validUserQueryAuth.Password))
             .Returns(Task.FromResult(true));
-        mock.Setup(m => m.CheckPasswordAsync(It.IsIn(validUser), It.IsNotIn(_validUserAuthQuery.Password)))
+        mock.Setup(m => m.CheckPasswordAsync(It.IsIn(validUser), It.IsNotIn(_validUserQueryAuth.Password)))
             .Returns(Task.FromResult(false));
-        mock.Setup(m => m.CreateAsync(It.IsAny<TaskListAppUser>(), _validUserAuthQuery.Password))
+        mock.Setup(m => m.CreateAsync(It.IsAny<TaskListAppUser>(), _validUserQueryAuth.Password))
             .Returns(Task.FromResult(IdentityResult.Success));
         
         _controller = new SecurityController(configuration, mock.Object);
@@ -41,7 +41,7 @@ public class SecurityControllerTests
     [Fact]
     public async void CreateToken_Ok()
     {
-        var result = await _controller.CreateToken(_validUserAuthQuery);
+        var result = await _controller.CreateToken(_validUserQueryAuth);
         var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(result);
         Assert.IsType<string>(okObjectResult.Value);
     }
@@ -49,7 +49,7 @@ public class SecurityControllerTests
     [Fact]
     public async void CreateToken_Unauthorized()
     {
-        var result = await _controller.CreateToken(_invalidUserAuthQuery);
+        var result = await _controller.CreateToken(_invalidUserQueryAuth);
         Assert.IsAssignableFrom<UnauthorizedResult>(result);
     }
 }

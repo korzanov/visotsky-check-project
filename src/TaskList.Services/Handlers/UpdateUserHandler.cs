@@ -6,7 +6,7 @@ using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-public class UpdateUserHandler : IRequestHandler<UpdatePersonalInfoCommand,PersonalInfoResponse>
+public class UpdateUserHandler : IRequestHandler<CommandPersonalInfoUpdate,PersonalInfoResponse>
 {
     private readonly IPersonalInfoRepository _repository;
 
@@ -15,7 +15,7 @@ public class UpdateUserHandler : IRequestHandler<UpdatePersonalInfoCommand,Perso
         _repository = repository;
     }
 
-    public async Task<PersonalInfoResponse> Handle(UpdatePersonalInfoCommand request, CancellationToken cancellationToken)
+    public async Task<PersonalInfoResponse> Handle(CommandPersonalInfoUpdate request, CancellationToken cancellationToken)
     {
         var personalInfo = new PersonalInfo(request.Login) { Name = request.Name, Email = request.Email};
         var result = await _repository.UpdatePersonalInfo(personalInfo);

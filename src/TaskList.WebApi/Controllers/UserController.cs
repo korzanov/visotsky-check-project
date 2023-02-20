@@ -32,11 +32,11 @@ public class UserController : ControllerBase
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateUser(UpdatePersonalInfoCommand updatePersonalInfoCommand, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateUser(CommandPersonalInfoUpdate commandPersonalInfoUpdate, CancellationToken cancellationToken = default)
     {
-        if (await IsNotCurrentUser(updatePersonalInfoCommand.Login))
+        if (await IsNotCurrentUser(commandPersonalInfoUpdate.Login))
             return Forbid();
-        var user = await _mediator.Send(updatePersonalInfoCommand, cancellationToken);
+        var user = await _mediator.Send(commandPersonalInfoUpdate, cancellationToken);
         return Ok(user);
     }
     
@@ -45,7 +45,7 @@ public class UserController : ControllerBase
     {
         if (await IsNotCurrentUser(login))
             return Forbid();
-        await _mediator.Send(new DeletePersonalInfoCommand(login), cancellationToken);
+        await _mediator.Send(new CommandPersonalInfoDelete(login), cancellationToken);
         return NoContent();
     }
     

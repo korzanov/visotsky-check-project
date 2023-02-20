@@ -4,7 +4,7 @@ using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-public class DeleteUserHandler : IRequestHandler<DeletePersonalInfoCommand>
+public class DeleteUserHandler : IRequestHandler<CommandPersonalInfoDelete>
 {
     private readonly IPersonalInfoRepository _repository;
 
@@ -13,7 +13,7 @@ public class DeleteUserHandler : IRequestHandler<DeletePersonalInfoCommand>
         _repository = repository;
     }
 
-    public async Task Handle(DeletePersonalInfoCommand request, CancellationToken cancellationToken)
+    public async Task Handle(CommandPersonalInfoDelete request, CancellationToken cancellationToken)
     {
         await _repository.DeletePersonalIno(request.Login);
     }

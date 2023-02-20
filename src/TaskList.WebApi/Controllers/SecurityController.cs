@@ -33,12 +33,12 @@ public class SecurityController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [Route("/security/createToken")]
-    public async Task<IActionResult> CreateToken([FromBody] AuthQuery auth, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateToken([FromBody] QueryAuth queryAuth, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.FindByNameAsync(auth.Login);
+        var user = await _userManager.FindByNameAsync(queryAuth.Login);
         if (user is null)
             return Unauthorized();
-        if(!await _userManager.CheckPasswordAsync(user, auth.Password))
+        if(!await _userManager.CheckPasswordAsync(user, queryAuth.Password))
             return Unauthorized("invalid password");
         
         var token = _jwt.CreateAndWriteToken(user.UserName);
@@ -48,15 +48,15 @@ public class SecurityController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [Route("/security/createUser")]
-    public async Task<IActionResult> CreateUser([FromBody] AuthQuery auth, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateUser([FromBody] QueryAuth queryAuth, CancellationToken cancellationToken = default)
     {
-        var user = new TaskListAppUser(auth.Login);
+        var user = new TaskListAppUser(queryAuth.Login);
 
-        var result = await _userManager.CreateAsync(user, auth.Password);
+        var result = await _userManager.CreateAsync(user, queryAuth.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        return Ok(auth);
+        return Ok(queryAuth);
     }
     
     private class Jwt
