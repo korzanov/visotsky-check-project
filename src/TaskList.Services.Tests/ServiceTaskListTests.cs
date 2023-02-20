@@ -48,8 +48,6 @@ public class ServiceTaskListTests : IClassFixture<ServicesFixture>
     {
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await _mediator.Send(new CommandTaskListUpdate(_notPossibleTaskListId, _anyString, _anyString)));
-
-        await Task.Delay(500);
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
             await _mediator.Send(new CommandTaskListUpdate(_notPossibleTaskListId, _anyString, _anyString)));
     }
@@ -59,8 +57,9 @@ public class ServiceTaskListTests : IClassFixture<ServicesFixture>
     {
         var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
         await _mediator.Send(new CommandTaskListDelete(createdTaskList.Id));
-        
-        Assert.True(true);
+
+        await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
+            await _mediator.Send(new QueryTaskListGet(createdTaskList.Id)));
     }
     
     [Fact]
@@ -68,7 +67,6 @@ public class ServiceTaskListTests : IClassFixture<ServicesFixture>
     {
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await _mediator.Send(new CommandTaskListDelete(_notPossibleTaskListId)));
-        
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
             await _mediator.Send(new CommandTaskListDelete(_notPossibleTaskListId)));
     }
