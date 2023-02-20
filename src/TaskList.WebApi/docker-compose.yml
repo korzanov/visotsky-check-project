@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5432:5432"
+      - "5656:5432"
     networks:
       pg_web_app:
         ipv4_address: 172.25.0.3
@@ -29,7 +29,7 @@ services:
       pg_web_app:
         ipv4_address: 172.25.0.2
     environment:
-      - dbConnectionString=Host=172.25.0.3;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};
+      - dbConnectionString=Host=172.25.0.3;Port=5656;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};
     restart: always
     
 networks:
