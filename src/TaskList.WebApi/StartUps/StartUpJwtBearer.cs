@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TaskList.WebApi.StartUp;
+namespace TaskList.WebApi.StartUps;
 
-internal static class JwtBearerStartUp
+internal static class StartUpJwtBearer
 {
     internal static void SetAuthenticationOptions(AuthenticationOptions options)
     {

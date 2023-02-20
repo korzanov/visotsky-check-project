@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using TaskList.DbInfrastructure.Data;
 using TaskList.DbInfrastructure.Identity;
 
-namespace TaskList.WebApi.StartUp;
+namespace TaskList.WebApi.StartUps;
 
-internal static class DataBaseStartUp
+internal static class StartUpDataBase
 {
     internal static async Task ApplyIdentityMigrations(IServiceProvider serviceProvider)
     {

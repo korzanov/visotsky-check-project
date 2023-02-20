@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace TaskList.WebApi.StartUp;
+namespace TaskList.WebApi.StartUps;
 
-public static class IdentityStartUp
+public static class StartUpIdentity
 {
     public static void UseEasyPassword(IdentityOptions options)
     {

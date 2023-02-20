@@ -1,9 +1,9 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace TaskList.WebApi.StartUp;
+namespace TaskList.WebApi.StartUps;
 
-public static class SwaggerStartUp
+public static class StartUpSwagger
 {
     public static void SetSwaggerOptions(SwaggerGenOptions swagger)
     {  

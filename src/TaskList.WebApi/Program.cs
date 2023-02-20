@@ -2,24 +2,24 @@ using Microsoft.AspNetCore.Identity;
 using TaskList.DbInfrastructure.Data;
 using TaskList.DbInfrastructure.Identity;
 using TaskList.Domain.Repositories;
-using TaskList.WebApi.StartUp;
+using TaskList.WebApi.StartUps;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<RepositoryDbContext>(DataBaseStartUp.SetConnectionString<RepositoryDbContext>);
-builder.Services.AddDbContext<TaskListIdentityDbContext>(DataBaseStartUp.SetConnectionString<TaskListIdentityDbContext>);
+builder.Services.AddDbContext<RepositoryDbContext>(StartUpDataBase.SetConnectionString<RepositoryDbContext>);
+builder.Services.AddDbContext<TaskListIdentityDbContext>(StartUpDataBase.SetConnectionString<TaskListIdentityDbContext>);
 builder.Services.AddScoped<IRepositoryPersonalInfo, RepositoryPersonalInfo>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IRepositoryReadOnly<>), typeof(EfRepository<>));
 
-builder.Services.AddIdentity<TaskListAppUser, IdentityRole>(IdentityStartUp.UseEasyPassword)
+builder.Services.AddIdentity<TaskListAppUser, IdentityRole>(StartUpIdentity.UseEasyPassword)
     .AddEntityFrameworkStores<TaskListIdentityDbContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddAuthentication(JwtBearerStartUp.SetAuthenticationOptions)
-    .AddJwtBearer(o => JwtBearerStartUp.SetJwtBearerOptions(o, builder));
+builder.Services.AddAuthentication(StartUpJwtBearer.SetAuthenticationOptions)
+    .AddJwtBearer(o => StartUpJwtBearer.SetJwtBearerOptions(o, builder));
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerGen(SwaggerStartUp.SetSwaggerOptions);
+builder.Services.AddSwaggerGen(StartUpSwagger.SetSwaggerOptions);
 builder.Services.AddMediatR(TaskList.Services.RegisterHelper.RegisterAssembly);
 
 var app = builder.Build();
@@ -30,7 +30,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await DataBaseStartUp.ApplyIdentityMigrations(app.Services);
-await DataBaseStartUp.ApplyRepositoryMigrations(app.Services);
+await StartUpDataBase.ApplyIdentityMigrations(app.Services);
+await StartUpDataBase.ApplyRepositoryMigrations(app.Services);
 
 app.Run();
