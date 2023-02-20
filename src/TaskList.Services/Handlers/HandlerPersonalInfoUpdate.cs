@@ -6,12 +6,12 @@ using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-internal record PersonalInfoMiddleObject(string Login, string Name, string Email) : IPersonalInfo;
-public class UpdateUserHandler : IRequestHandler<CommandPersonalInfoUpdate,ResponsePersonalInfo>
+
+public class HandlerPersonalInfoUpdate : IRequestHandler<CommandPersonalInfoUpdate,ResponsePersonalInfo>
 {
     private readonly IPersonalInfoRepository _repository;
 
-    public UpdateUserHandler(IPersonalInfoRepository repository)
+    public HandlerPersonalInfoUpdate(IPersonalInfoRepository repository)
     {
         _repository = repository;
     }
@@ -22,4 +22,6 @@ public class UpdateUserHandler : IRequestHandler<CommandPersonalInfoUpdate,Respo
         var result = await _repository.UpdatePersonalInfo(personalInfo);
         return new ResponsePersonalInfo(result.Login, result.Name, result.Email);
     }
+    
+    private record PersonalInfoMiddleObject(string Login, string Name, string Email) : IPersonalInfo;
 }

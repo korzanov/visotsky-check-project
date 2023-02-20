@@ -14,10 +14,10 @@ public class PersonalInfoRepository : IPersonalInfoRepository
     public PersonalInfoRepository(UserManager<TaskListAppUser> manager) => 
         _manager = manager;
 
-    public async Task<IPersonalInfo> GetPersonalInfo(string userName)
+    public async Task<IPersonalInfo> GetPersonalInfo(string login)
     {
-        return await _manager.FindByNameAsync(userName) 
-               ?? throw new NotFoundException(userName, nameof(IPersonalInfo));
+        return await _manager.FindByNameAsync(login) 
+               ?? throw new NotFoundException(login, nameof(IPersonalInfo));
     }
 
     public async Task<IPersonalInfo> UpdatePersonalInfo(IPersonalInfo newPersonalInfo)
@@ -32,10 +32,10 @@ public class PersonalInfoRepository : IPersonalInfoRepository
         throw new Exception(JsonSerializer.Serialize(result.Errors));
     }
 
-    public async Task DeletePersonalIno(string userName)
+    public async Task DeletePersonalInfo(string login)
     {        
-        var personalInfo = await _manager.FindByNameAsync(userName);
-        Guard.Against.NotFound(userName, personalInfo, nameof(personalInfo));
+        var personalInfo = await _manager.FindByNameAsync(login);
+        Guard.Against.NotFound(login, personalInfo, nameof(personalInfo));
         var result = await _manager.DeleteAsync(personalInfo);
         if (result.Succeeded)
             return;

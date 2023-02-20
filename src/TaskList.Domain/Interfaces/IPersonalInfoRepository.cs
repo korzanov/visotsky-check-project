@@ -5,7 +5,7 @@ namespace TaskList.Domain.Interfaces;
 
 public interface IPersonalInfoRepository
 {
-    Task<IPersonalInfo> GetPersonalInfo(string userName);
+    Task<IPersonalInfo> GetPersonalInfo(string login);
     Task<IPersonalInfo> UpdatePersonalInfo(IPersonalInfo newPersonalInfo);
-    Task DeletePersonalIno(string userName);
+    Task DeletePersonalInfo(string login);
 }

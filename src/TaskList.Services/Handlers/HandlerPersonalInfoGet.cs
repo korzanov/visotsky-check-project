@@ -5,11 +5,11 @@ using TaskList.Domain.Interfaces;
 
 namespace TaskList.Services.Handlers;
 
-public class GetPersonalInfoHandler : IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
+public class HandlerPersonalInfoGet : IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
 {
     private readonly IPersonalInfoRepository _repository;
 
-    public GetPersonalInfoHandler(IPersonalInfoRepository repository)
+    public HandlerPersonalInfoGet(IPersonalInfoRepository repository)
     {
         _repository = repository;
     }
