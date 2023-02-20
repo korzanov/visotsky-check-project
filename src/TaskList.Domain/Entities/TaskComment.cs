@@ -4,5 +4,5 @@ public class TaskComment
 {
     public Guid Id { get; set; }
     public Task Task { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }
