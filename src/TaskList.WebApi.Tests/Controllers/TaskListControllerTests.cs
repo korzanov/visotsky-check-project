@@ -16,7 +16,7 @@ public class TaskListControllerTests : BaseControllerTests
 
         var defaultTaskList = new ResponseTaskList(Guid.Empty, null, null);
         
-        SetupMediatrMockAnyRequest<QueryTaskListsGet, IEnumerable<ResponseTaskList>>(Enumerable.Empty<ResponseTaskList>());
+        SetupMediatrMockAnyRequest<QueryTaskListGetAll, IEnumerable<ResponseTaskList>>(Enumerable.Empty<ResponseTaskList>());
         SetupMediatrMockAnyRequest<QueryTaskListGet, ResponseTaskList>(defaultTaskList);
         SetupMediatrMockAnyRequest<CommandTaskListCreate, ResponseTaskList>(defaultTaskList);
         SetupMediatrMockAnyRequest<CommandTaskListUpdate, ResponseTaskList>(defaultTaskList);

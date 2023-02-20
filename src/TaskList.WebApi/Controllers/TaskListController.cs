@@ -21,7 +21,7 @@ public class TaskListController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTaskLists(CancellationToken cancellationToken = default)
     {
-        return Ok(await _mediator.Send(new QueryTaskListsGet(), cancellationToken));
+        return Ok(await _mediator.Send(new QueryTaskListGetAll(), cancellationToken));
     }
 
     [HttpGet("{id:guid}")]

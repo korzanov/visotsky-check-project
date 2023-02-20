@@ -3,4 +3,4 @@ using TaskList.Contracts.Responses;
 
 namespace TaskList.Contracts.Queries;
 
-public record QueryTaskListsGet() : IRequest<IEnumerable<ResponseTaskList>>;
+public record QueryTaskListGetAll() : IRequest<IEnumerable<ResponseTaskList>>;
