@@ -1,5 +1,5 @@
 using Ardalis.Specification;
 
-namespace TaskList.Domain.Interfaces;
+namespace TaskList.Domain.Repositories;
 
 public interface IRepositoryReadOnly<T> : IReadRepositoryBase<T> where T : class { }

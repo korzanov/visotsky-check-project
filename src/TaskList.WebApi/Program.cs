@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
-using TaskList.Domain.Interfaces;
 using TaskList.DbInfrastructure.Data;
 using TaskList.DbInfrastructure.Identity;
+using TaskList.Domain.Repositories;
 using TaskList.WebApi.StartUp;
 
 var builder = WebApplication.CreateBuilder(args);

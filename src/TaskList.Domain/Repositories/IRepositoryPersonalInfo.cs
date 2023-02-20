@@ -1,7 +1,7 @@
 using TaskList.Domain.Entities;
 using Task = System.Threading.Tasks.Task;
 
-namespace TaskList.Domain.Interfaces;
+namespace TaskList.Domain.Repositories;
 
 public interface IRepositoryPersonalInfo
 {

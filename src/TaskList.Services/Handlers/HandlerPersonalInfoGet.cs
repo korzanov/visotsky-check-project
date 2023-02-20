@@ -1,7 +1,7 @@
 using MediatR;
 using TaskList.Contracts.Queries;
 using TaskList.Contracts.Responses;
-using TaskList.Domain.Interfaces;
+using TaskList.Domain.Repositories;
 
 namespace TaskList.Services.Handlers;
 

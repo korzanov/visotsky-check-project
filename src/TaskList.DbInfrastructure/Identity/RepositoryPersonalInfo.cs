@@ -2,7 +2,7 @@ using System.Text.Json;
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Identity;
 using TaskList.Domain.Entities;
-using TaskList.Domain.Interfaces;
+using TaskList.Domain.Repositories;
 using Task = System.Threading.Tasks.Task;
 
 namespace TaskList.DbInfrastructure.Identity;
