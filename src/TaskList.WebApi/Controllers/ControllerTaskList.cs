@@ -34,14 +34,14 @@ public class ControllerTaskList : ControllerBase
     public async Task<IActionResult> CreateTaskList([FromBody] CommandTaskListCreate commandTaskListCreate, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(commandTaskListCreate, cancellationToken);
-        return CreatedAtAction(nameof(GetTaskList), result.Id, result);
+        return CreatedAtAction(nameof(GetTaskList), new { id = result.Id }, result);
     }
     
     [HttpPut]
     public async Task<IActionResult> UpdateTaskList([FromBody] CommandTaskListUpdate commandTaskListUpdate, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(commandTaskListUpdate, cancellationToken);
-        return AcceptedAtAction(nameof(GetTaskList), result.Id, result);
+        return AcceptedAtAction(nameof(GetTaskList), new { id = result.Id }, result);
     }
     
     [HttpDelete("{id:guid}")]
