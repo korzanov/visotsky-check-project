@@ -9,9 +9,9 @@ namespace TaskList.Services.Handlers;
 
 public class HandlerPersonalInfoUpdate : IRequestHandler<CommandPersonalInfoUpdate,ResponsePersonalInfo>
 {
-    private readonly IPersonalInfoRepository _repository;
+    private readonly IRepositoryPersonalInfo _repository;
 
-    public HandlerPersonalInfoUpdate(IPersonalInfoRepository repository)
+    public HandlerPersonalInfoUpdate(IRepositoryPersonalInfo repository)
     {
         _repository = repository;
     }

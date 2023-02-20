@@ -7,11 +7,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TaskList.DbInfrastructure.Identity;
 
-public class PersonalInfoRepository : IPersonalInfoRepository
+public class RepositoryPersonalInfo : IRepositoryPersonalInfo
 {
     private readonly UserManager<TaskListAppUser> _manager;
 
-    public PersonalInfoRepository(UserManager<TaskListAppUser> manager) => 
+    public RepositoryPersonalInfo(UserManager<TaskListAppUser> manager) => 
         _manager = manager;
 
     public async Task<IPersonalInfo> GetPersonalInfo(string login)

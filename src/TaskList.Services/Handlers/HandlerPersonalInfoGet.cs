@@ -7,9 +7,9 @@ namespace TaskList.Services.Handlers;
 
 public class HandlerPersonalInfoGet : IRequestHandler<QueryPersonalInfoGet, ResponsePersonalInfo>
 {
-    private readonly IPersonalInfoRepository _repository;
+    private readonly IRepositoryPersonalInfo _repository;
 
-    public HandlerPersonalInfoGet(IPersonalInfoRepository repository)
+    public HandlerPersonalInfoGet(IRepositoryPersonalInfo repository)
     {
         _repository = repository;
     }

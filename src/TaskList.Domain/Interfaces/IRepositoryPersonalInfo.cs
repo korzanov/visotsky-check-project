@@ -3,7 +3,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TaskList.Domain.Interfaces;
 
-public interface IPersonalInfoRepository
+public interface IRepositoryPersonalInfo
 {
     Task<IPersonalInfo> GetPersonalInfo(string login);
     Task<IPersonalInfo> UpdatePersonalInfo(IPersonalInfo newPersonalInfo);

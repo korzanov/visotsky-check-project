@@ -6,9 +6,9 @@ namespace TaskList.Services.Handlers;
 
 public class HandlerPersonalInfoDelete : IRequestHandler<CommandPersonalInfoDelete>
 {
-    private readonly IPersonalInfoRepository _repository;
+    private readonly IRepositoryPersonalInfo _repository;
 
-    public HandlerPersonalInfoDelete(IPersonalInfoRepository repository)
+    public HandlerPersonalInfoDelete(IRepositoryPersonalInfo repository)
     {
         _repository = repository;
     }
