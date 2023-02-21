@@ -36,7 +36,9 @@ public class ControllerTask : ControllerBase
     public async Task<IActionResult> GetTask(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _mediator.Send(new QueryTaskGet(id), cancellationToken);
-        return Ok(response);
+        var statusRecord = await _mediator.Send(new QueryTaskStatusRecordGetLast(id), cancellationToken);
+        var comments = await _mediator.Send(new QueryTaskCommentGetAll(id), cancellationToken);
+        return Ok(new { task = response, status = statusRecord, comments });
     }
 
     [HttpPost]
