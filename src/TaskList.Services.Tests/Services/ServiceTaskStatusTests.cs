@@ -33,6 +33,8 @@ public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
     [Fact]
     public async void CmdGetDefault_Success()
     {
+        await _mediator.Send(new CommandTaskStatusSetDefaults());
+        
         var defaultStatus = await _mediator.Send(new QueryTaskStatusGetDefault());
 
         Assert.Equal(ResponseTaskStatus.Default, defaultStatus);
@@ -41,6 +43,8 @@ public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
     [Fact]
     public async void CmdGetAll_Success()
     {
+        await _mediator.Send(new CommandTaskStatusSetDefaults());
+        
         var statuses = (await _mediator.Send(new QueryTaskStatusGetAll())).ToArray();
 
         Assert.True(ResponseTaskStatus.Defaults.Length <= statuses.Length);
