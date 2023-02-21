@@ -10,6 +10,7 @@ namespace TaskList.Services.Handlers;
 public class CommandHandlersTask :
     IRequestHandler<CommandTaskCreate, ResponseTask>,
     IRequestHandler<CommandTaskUpdate, ResponseTask>,
+    IRequestHandler<CommandTaskChangeTaskList, ResponseTask>,
     IRequestHandler<CommandTaskDelete>
 {
     private readonly IRepository<TaskList.Domain.Entities.Task> _taskRepository;
@@ -51,5 +52,16 @@ public class CommandHandlersTask :
         var existTask = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, existTask, nameof(existTask.Id));
         await _taskRepository.DeleteAsync(existTask, cancellationToken);
+    }
+
+    public async Task<ResponseTask> Handle(CommandTaskChangeTaskList request, CancellationToken cancellationToken)
+    {
+        var taskList = await _taskListRepository.GetByIdAsync(request.TaskListId, cancellationToken);
+        Guard.Against.NotFound(request.TaskListId, taskList, nameof(taskList.Id));
+        var existTask = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
+        Guard.Against.NotFound(request.Id, existTask, nameof(existTask.Id));
+        existTask.TaskListId = request.TaskListId;
+        var updatedTask = await _taskRepository.GetByIdAsync(existTask.Id, cancellationToken);
+        return _mapper.Map<ResponseTask>(updatedTask);
     }
 }
