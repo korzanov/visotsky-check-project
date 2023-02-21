@@ -32,7 +32,7 @@ public class CommandHandlersTaskStatusRecord : IRequestHandler<CommandTaskStatus
         var task = await _repositoryTask.GetByIdAsync(request.TaskId, cancellationToken);
         Guard.Against.NotFound(request.TaskId, task, nameof(task.Id));
         var newRecord = _mapper.Map<Domain.Entities.TaskStatusRecord>(request);
-        newRecord.DateTime = DateTime.Now;
+        newRecord.DateTime = DateTime.UtcNow;
         var record = await _repositoryRecord.AddAsync(newRecord, cancellationToken);
         var response = _mapper.Map<ResponseTaskStatusRecord>(record);
         return response with { StatusName = status.Name };

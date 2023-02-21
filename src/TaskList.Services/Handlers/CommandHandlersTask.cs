@@ -32,6 +32,7 @@ public class CommandHandlersTask :
         var taskList = await _taskListRepository.GetByIdAsync(request.TaskListId, cancellationToken);
         Guard.Against.NotFound(request.TaskListId, taskList, nameof(taskList.Id));
         var taskToCreate = _mapper.Map<Domain.Entities.Task>(request);
+        taskToCreate.CreatedAt = DateTime.UtcNow;
         var createdTask = await _taskRepository.AddAsync(taskToCreate, cancellationToken);
         return _mapper.Map<ResponseTask>(createdTask);
     }
