@@ -67,7 +67,7 @@ public class TaskStatusRecordTests : ClassFixture
             await Mediator.Send(new CommandTaskStatusRecordCreate(task.Id, status.Id));
 
             var record = await Mediator.Send(new QueryTaskStatusRecordGetLast(task.Id));
-            Assert.Equal(status.Id, record.Id);
+            Assert.Equal(status.Name, record.StatusName);
         }
     }
     
