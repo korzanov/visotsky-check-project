@@ -40,7 +40,7 @@ public class ControllerUser : ControllerBase
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateUser(CommandPersonalInfoUpdate commandPersonalInfoUpdate, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateUser([FromBody] CommandPersonalInfoUpdate commandPersonalInfoUpdate, CancellationToken cancellationToken = default)
     {
         if (await IsNotCurrentUser(commandPersonalInfoUpdate.Login))
             return Forbid();
@@ -48,12 +48,12 @@ public class ControllerUser : ControllerBase
         return Ok(user);
     }
     
-    [HttpDelete("{login}")]
-    public async Task<IActionResult> DeleteUser(string login, CancellationToken cancellationToken = default)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser([FromBody] CommandPersonalInfoDelete delete, CancellationToken cancellationToken = default)
     {
-        if (await IsNotCurrentUser(login))
+        if (await IsNotCurrentUser(delete.Login))
             return Forbid();
-        await _mediator.Send(new CommandPersonalInfoDelete(login), cancellationToken);
+        await _mediator.Send(delete, cancellationToken);
         return NoContent();
     }
     

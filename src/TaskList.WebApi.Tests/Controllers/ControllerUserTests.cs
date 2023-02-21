@@ -50,7 +50,7 @@ public class ControllerUserTests : ControllerWithMediatorTests
     [Fact (Skip = "while identity not mocked")]
     public async void UserDelete_Success()
     {
-        var result = await _controllerUser.DeleteUser(_loginOnContext);
+        var result = await _controllerUser.DeleteUser(new CommandPersonalInfoDelete(_loginOnContext));
         
         Assert.IsType<NoContentResult>(result);
     }
@@ -58,7 +58,7 @@ public class ControllerUserTests : ControllerWithMediatorTests
     [Fact (Skip = "while identity not mocked")]
     public async void UserDelete_Forbidden()
     {
-        var result = await _controllerUser.DeleteUser(_invalidLogin);
+        var result = await _controllerUser.DeleteUser(new CommandPersonalInfoDelete(_invalidLogin));
         
         Assert.IsType<ForbidResult>(result);
     }
