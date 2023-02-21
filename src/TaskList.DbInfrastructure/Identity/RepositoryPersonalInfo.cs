@@ -16,8 +16,9 @@ public class RepositoryPersonalInfo : IRepositoryPersonalInfo
 
     public async Task<IPersonalInfo> GetPersonalInfo(string login)
     {
-        return await _manager.FindByNameAsync(login) 
-               ?? throw new NotFoundException(login, nameof(IPersonalInfo));
+        var user = await _manager.FindByNameAsync(login);
+        Guard.Against.NotFound(login, user, nameof(user.Login));
+        return user;
     }
 
     public async Task<IPersonalInfo> UpdatePersonalInfo(IPersonalInfo newPersonalInfo)
