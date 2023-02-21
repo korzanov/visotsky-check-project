@@ -3,7 +3,7 @@ namespace TaskList.Domain.Entities;
 public class TaskStatusRecord
 {
     public Guid Id { get; set; }
-    public TaskStatus Status { get; set; }
-    public Task Task { get; set; }
+    public Guid TaskStatusId { get; set; }
+    public Guid TaskId { get; set; }
     public DateTime DateTime { get; set; }
 }
