@@ -120,7 +120,7 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
     public async void QueryTaskGet_Success(string name, string desc)
     {
         var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+        var createdTask = await _mediator.Send(new CommandTaskCreate(name, desc, createdTaskList.Id));
         
         var responseTask = await _mediator.Send(new QueryTaskGet(createdTask.Id));
         
