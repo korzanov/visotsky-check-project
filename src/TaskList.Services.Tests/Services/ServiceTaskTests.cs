@@ -54,7 +54,7 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
     }
 
     [Fact]
-    public async void CmdTaskChangeTaskList_NotFound()
+    public async void CmdTaskChangeTaskList_TaskList_NotFound()
     {
         var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
         
@@ -62,6 +62,15 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
         
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
             await _mediator.Send(new CommandTaskChangeTaskList(createdTask.Id, _notPossibleId)));
+    }
+
+    [Fact]
+    public async void CmdTaskChangeTaskList_Task_NotFound()
+    {
+        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        
+        await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
+            await _mediator.Send(new CommandTaskChangeTaskList(_notPossibleId, createdTaskList.Id)));
     }
 
     [Fact]
