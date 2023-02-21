@@ -2,7 +2,7 @@ using MediatR;
 using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
 
-namespace TaskList.Services.Tests;
+namespace TaskList.Services.Tests.Services;
 
 public class ServiceTaskTests : IClassFixture<ServicesFixture>
 {

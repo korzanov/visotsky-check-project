@@ -1,10 +1,8 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
 
-namespace TaskList.Services.Tests;
+namespace TaskList.Services.Tests.Services;
 
 public class ServiceTaskListTests : IClassFixture<ServicesFixture>
 {
