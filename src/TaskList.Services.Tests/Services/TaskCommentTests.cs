@@ -6,12 +6,10 @@ namespace TaskList.Services.Tests.Services;
 public class TaskCommentTests : ClassFixture
 {
     private readonly Guid _existTaskId;
-    private readonly Guid _existTaskListId;
     
     public TaskCommentTests(ServicesFixture servicesFixture) : base(servicesFixture)
     {
         var taskList = Mediator.Send(new CommandTaskListCreate(AnyString, AnyString)).Result;
-        _existTaskListId = taskList.Id;
         var task = Mediator.Send(new CommandTaskCreate(AnyString, AnyString, taskList.Id)).Result;
         _existTaskId = task.Id;
     }
