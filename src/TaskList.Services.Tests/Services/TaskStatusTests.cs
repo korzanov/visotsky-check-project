@@ -1,18 +1,12 @@
-using MediatR;
 using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
 using TaskList.Contracts.Responses;
 
 namespace TaskList.Services.Tests.Services;
 
-public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
+public class ServiceTaskStatusTests : ClassFixture
 {
-    private readonly IMediator _mediator;
-
-    public ServiceTaskStatusTests(ServicesFixture servicesFixture)
-    {
-        _mediator = servicesFixture.Mediator;
-    }
+    public ServiceTaskStatusTests(ServicesFixture servicesFixture) : base(servicesFixture) {}
 
     [Theory]
     [InlineData(1)]
@@ -21,9 +15,9 @@ public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
     public async void CmdSetDefaults_Success(int count)
     {
         for (var i = 0; i < count; i++)
-            await _mediator.Send(new CommandTaskStatusSetDefaults());
+            await Mediator.Send(new CommandTaskStatusSetDefaults());
 
-        var statuses = (await _mediator.Send(new QueryTaskStatusGetAll())).ToArray();
+        var statuses = (await Mediator.Send(new QueryTaskStatusGetAll())).ToArray();
 
         Assert.Equal(ResponseTaskStatus.Defaults.Length, statuses.Length);
         foreach(var status in ResponseTaskStatus.Defaults)
@@ -33,9 +27,9 @@ public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
     [Fact]
     public async void CmdGetDefault_Success()
     {
-        await _mediator.Send(new CommandTaskStatusSetDefaults());
+        await Mediator.Send(new CommandTaskStatusSetDefaults());
         
-        var defaultStatus = await _mediator.Send(new QueryTaskStatusGetDefault());
+        var defaultStatus = await Mediator.Send(new QueryTaskStatusGetDefault());
 
         Assert.Equal(ResponseTaskStatus.Default, defaultStatus);
     }
@@ -43,9 +37,9 @@ public class ServiceTaskStatusTests : IClassFixture<ServicesFixture>
     [Fact]
     public async void CmdGetAll_Success()
     {
-        await _mediator.Send(new CommandTaskStatusSetDefaults());
+        await Mediator.Send(new CommandTaskStatusSetDefaults());
         
-        var statuses = (await _mediator.Send(new QueryTaskStatusGetAll())).ToArray();
+        var statuses = (await Mediator.Send(new QueryTaskStatusGetAll())).ToArray();
 
         Assert.True(ResponseTaskStatus.Defaults.Length <= statuses.Length);
         foreach(var status in ResponseTaskStatus.Defaults)

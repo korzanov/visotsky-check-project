@@ -1,21 +1,11 @@
-using MediatR;
 using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
 
 namespace TaskList.Services.Tests.Services;
 
-public class TaskTests : IClassFixture<ServicesFixture>
+public class TaskTests : ClassFixture
 {
-    private readonly IMediator _mediator;
-    private readonly Guid _notPossibleId;
-    private readonly string _anyString;
-
-    public TaskTests(ServicesFixture servicesFixture)
-    {
-        _mediator = servicesFixture.Mediator;
-        _notPossibleId = new Guid("F88C636F-EA8D-424A-887C-C5683410A6B7");
-        _anyString = "AD0AB380-AD46-4BC2-962B-16B152E6100E";
-    }
+    public TaskTests(ServicesFixture servicesFixture) : base(servicesFixture) {}
     
     #region Commands
     
@@ -24,9 +14,9 @@ public class TaskTests : IClassFixture<ServicesFixture>
     [InlineData("1111", "1111")]
     public async void CmdTaskCreate_Success(string name, string desc)
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
         
-        var createdTask = await _mediator.Send(new CommandTaskCreate(name, desc, createdTaskList.Id));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(name, desc, createdTaskList.Id));
         
         Assert.Equal(name, createdTask.Name);
         Assert.Equal(desc, createdTask.Description);
@@ -37,10 +27,10 @@ public class TaskTests : IClassFixture<ServicesFixture>
     [InlineData("1111", "1111")]
     public async void CmdTaskUpdate_Success(string name, string desc)
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
         
-        var updatedString = await _mediator.Send(new CommandTaskUpdate(createdTask.Id, name, desc));
+        var updatedString = await Mediator.Send(new CommandTaskUpdate(createdTask.Id, name, desc));
         
         Assert.Equal(name, updatedString.Name);
         Assert.Equal(desc, updatedString.Description);
@@ -50,37 +40,37 @@ public class TaskTests : IClassFixture<ServicesFixture>
     public async void CmdTaskUpdate_NotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () => 
-            await _mediator.Send(new CommandTaskUpdate(_notPossibleId, _anyString, _anyString)));
+            await Mediator.Send(new CommandTaskUpdate(NotPossibleId, AnyString, AnyString)));
     }
 
     [Fact]
     public async void CmdTaskChangeTaskList_TaskList_NotFound()
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
         
-        var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
         
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new CommandTaskChangeTaskList(createdTask.Id, _notPossibleId)));
+            await Mediator.Send(new CommandTaskChangeTaskList(createdTask.Id, NotPossibleId)));
     }
 
     [Fact]
     public async void CmdTaskChangeTaskList_Task_NotFound()
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
         
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new CommandTaskChangeTaskList(_notPossibleId, createdTaskList.Id)));
+            await Mediator.Send(new CommandTaskChangeTaskList(NotPossibleId, createdTaskList.Id)));
     }
 
     [Fact]
     public async void CmdTaskChangeTaskList_Success()
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
-        var createdTaskListAnother = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
+        var createdTaskListAnother = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
         
-        var replacedTask = await _mediator.Send(new CommandTaskChangeTaskList(createdTask.Id, createdTaskListAnother.Id));
+        var replacedTask = await Mediator.Send(new CommandTaskChangeTaskList(createdTask.Id, createdTaskListAnother.Id));
         
         Assert.Equal(createdTaskListAnother.Id, replacedTask.TaskListId);
     }
@@ -88,10 +78,10 @@ public class TaskTests : IClassFixture<ServicesFixture>
     [Fact]
     public async void CmdTaskDelete_Success()
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
 
-        await _mediator.Send(new CommandTaskDelete(createdTask.Id));
+        await Mediator.Send(new CommandTaskDelete(createdTask.Id));
         
         Assert.True(true);
     }
@@ -100,14 +90,14 @@ public class TaskTests : IClassFixture<ServicesFixture>
     public async void CmdTaskDelete_NotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new CommandTaskDelete(_notPossibleId)));
+            await Mediator.Send(new CommandTaskDelete(NotPossibleId)));
     }
 
     [Fact]
     public async void CmdTaskCreate_NotFoundTaskList()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, _notPossibleId)));
+            await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, NotPossibleId)));
     }
     
     #endregion
@@ -119,10 +109,10 @@ public class TaskTests : IClassFixture<ServicesFixture>
     [InlineData("1111", "1111")]
     public async void QueryTaskGet_Success(string name, string desc)
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        var createdTask = await _mediator.Send(new CommandTaskCreate(name, desc, createdTaskList.Id));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
+        var createdTask = await Mediator.Send(new CommandTaskCreate(name, desc, createdTaskList.Id));
         
-        var responseTask = await _mediator.Send(new QueryTaskGet(createdTask.Id));
+        var responseTask = await Mediator.Send(new QueryTaskGet(createdTask.Id));
         
         Assert.Equal(name, responseTask.Name);
         Assert.Equal(desc, responseTask.Description);
@@ -132,16 +122,16 @@ public class TaskTests : IClassFixture<ServicesFixture>
     public async void QueryTaskGet_NotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new QueryTaskGet(_notPossibleId)));
+            await Mediator.Send(new QueryTaskGet(NotPossibleId)));
     }
     
     [Fact]
     public async void QueryTaskGetAll_Success()
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
-        await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
+        await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
         
-        var responseTasks = await _mediator.Send(new QueryTaskGetAll());
+        var responseTasks = await Mediator.Send(new QueryTaskGetAll());
         
         Assert.True(responseTasks.Any());
     }
@@ -152,11 +142,11 @@ public class TaskTests : IClassFixture<ServicesFixture>
     [InlineData(5)]
     public async void QueryTaskGetAllByTask_Success(int count)
     {
-        var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
+        var createdTaskList = await Mediator.Send(new CommandTaskListCreate(AnyString, AnyString));
         for (var i = 0; i < count; i++)
-            await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
+            await Mediator.Send(new CommandTaskCreate(AnyString, AnyString, createdTaskList.Id));
 
-        var responseTasks = await _mediator.Send(new QueryTaskGetAllByTaskList(createdTaskList.Id));
+        var responseTasks = await Mediator.Send(new QueryTaskGetAllByTaskList(createdTaskList.Id));
         
         Assert.Equal(count, responseTasks.Count());
     }
@@ -165,7 +155,7 @@ public class TaskTests : IClassFixture<ServicesFixture>
     public async void QueryTaskGetAllByTask_NotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new QueryTaskGetAllByTaskList(_notPossibleId)));
+            await Mediator.Send(new QueryTaskGetAllByTaskList(NotPossibleId)));
     }
 
     #endregion
