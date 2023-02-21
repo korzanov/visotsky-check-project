@@ -1,18 +1,19 @@
 using TaskList.Contracts.Commands;
 using TaskList.Contracts.Queries;
+using TaskList.Contracts.Responses;
 
 namespace TaskList.Services.Tests.Services;
 
 public class TaskStatusRecordTests : ClassFixture
 {
-    private readonly Guid _defaultStatusId;
+    private readonly ResponseTaskStatus _defaultStatus;
     private readonly Guid _existTaskId;
     private readonly Guid _existTaskListId;
     
     public TaskStatusRecordTests(ServicesFixture servicesFixture) : base(servicesFixture)
     {
         Mediator.Send(new CommandTaskStatusSetDefaults()).GetAwaiter();
-        _defaultStatusId = Mediator.Send(new QueryTaskStatusGetDefault()).Result.Id;
+        _defaultStatus = Mediator.Send(new QueryTaskStatusGetDefault()).Result;
         var taskList = Mediator.Send(new CommandTaskListCreate(AnyString, AnyString)).Result;
         _existTaskListId = taskList.Id;
         var task = Mediator.Send(new CommandTaskCreate(AnyString, AnyString, taskList.Id)).Result;
@@ -22,9 +23,9 @@ public class TaskStatusRecordTests : ClassFixture
     [Fact]
     public async void CmdTaskStatusRecordCreate_Default_Success()
     {
-        var record = await Mediator.Send(new CommandTaskStatusRecordCreate(_existTaskId, _defaultStatusId));
+        var record = await Mediator.Send(new CommandTaskStatusRecordCreate(_existTaskId, _defaultStatus.Id));
         
-        Assert.Equal(_defaultStatusId, record.Id);
+        Assert.Equal(_defaultStatus.Name, record.StatusName);
     }
 
     [Fact]
@@ -35,7 +36,7 @@ public class TaskStatusRecordTests : ClassFixture
         foreach (var status in taskStatuses)
         {
             var record = await Mediator.Send(new CommandTaskStatusRecordCreate(_existTaskId, status.Id));
-            Assert.Equal(status.Id, record.Id);
+            Assert.Equal(status.Name, record.StatusName);
         }
     }
 
@@ -50,7 +51,7 @@ public class TaskStatusRecordTests : ClassFixture
     public async void CmdTaskStatusRecordCreate_TaskNotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>( async () =>
-            await Mediator.Send(new CommandTaskStatusRecordCreate(NotPossibleId, _defaultStatusId)));
+            await Mediator.Send(new CommandTaskStatusRecordCreate(NotPossibleId, _defaultStatus.Id)));
     }
     
     [Fact]
