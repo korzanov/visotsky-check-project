@@ -53,6 +53,19 @@ public class ControllerTaskList : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteTaskList(Guid id, CancellationToken cancellationToken = default)
     {
+        var tasks = await _mediator.Send(new QueryTaskGetAllByTaskList(id), cancellationToken);
+        if (tasks.Any())
+            return RedirectToAction(nameof(DeleteTaskListWithReplace));
+        await _mediator.Send(new CommandTaskListDelete(id), cancellationToken);
+        return NoContent();
+    }
+    
+    [HttpDelete("{id:guid}/to/{replaceId:guid}")]
+    public async Task<IActionResult> DeleteTaskListWithReplace(Guid id, Guid replaceId, CancellationToken cancellationToken = default)
+    {
+        var tasks = await _mediator.Send(new QueryTaskGetAllByTaskList(id), cancellationToken);
+        foreach (var task in tasks)
+            await _mediator.Send(new CommandTaskChangeTaskList(task.Id, replaceId), cancellationToken);
         await _mediator.Send(new CommandTaskListDelete(id), cancellationToken);
         return NoContent();
     }
