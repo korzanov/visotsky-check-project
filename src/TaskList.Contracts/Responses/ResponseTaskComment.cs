@@ -1,3 +1,3 @@
 namespace TaskList.Contracts.Responses;
 
-public record ResponseTaskComment();
+public record ResponseTaskComment(string Message);
