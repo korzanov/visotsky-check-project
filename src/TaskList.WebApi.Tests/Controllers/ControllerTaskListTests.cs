@@ -56,7 +56,7 @@ public class ControllerTaskListTests : ControllerWithMediatorTests
         var id = Guid.NewGuid();
         var result = await _controller.UpdateTaskList(new CommandTaskListUpdate(id, null,null));
         
-        var ok = Assert.IsType<AcceptedAtActionResult>(result);
+        var ok = Assert.IsType<CreatedAtActionResult>(result);
         Assert.IsAssignableFrom<ResponseTaskList>(ok.Value);
     }
     
