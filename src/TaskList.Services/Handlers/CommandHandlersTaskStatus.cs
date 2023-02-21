@@ -10,6 +10,7 @@ public class CommandHandlersTaskStatus : IRequestHandler<CommandTaskStatusSetDef
 {
     private readonly IRepository<Domain.Entities.TaskStatus> _repository;
     private readonly IMapper _mapper;
+    private static readonly object Sync = new();
 
     public CommandHandlersTaskStatus(IRepository<Domain.Entities.TaskStatus> repository, IMapper mapper)
     {
@@ -21,11 +22,17 @@ public class CommandHandlersTaskStatus : IRequestHandler<CommandTaskStatusSetDef
     {
         foreach (var status in ResponseTaskStatus.Defaults)
         {
+            Monitor.Enter(Sync);
             var existStatus = await _repository.GetByIdAsync(status.Id, cancellationToken);
-            if (existStatus is not null) continue;
+            if (existStatus is not null)
+            {
+                Monitor.Exit(Sync);
+                continue;
+            }
             var newStatus = _mapper.Map<Domain.Entities.TaskStatus>(status);
             await _repository.AddAsync(newStatus, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
+            Monitor.Exit(Sync);
         }
-        await _repository.SaveChangesAsync(cancellationToken);
     }
 }
