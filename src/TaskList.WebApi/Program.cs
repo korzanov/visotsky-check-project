@@ -38,3 +38,5 @@ await StartUpDataBase.ApplyRepositoryMigrations(app.Services);
 await StartUpDataBase.SeedDefaultStatuses(app.Services);
 
 app.Run();
+
+public partial class Program { }
