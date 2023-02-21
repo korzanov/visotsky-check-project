@@ -10,7 +10,7 @@ namespace TaskList.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/users")]
+[Route(RouteConstants.UriUsers)]
 public class ControllerUser : ControllerBase
 {
     private readonly IMediator _mediator;

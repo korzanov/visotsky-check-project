@@ -21,7 +21,7 @@ public class ControllerSecurity : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("/security/checkToken")]
+    [Route(RouteConstants.UriSecurityCheckToken)]
     public Task<IActionResult> CheckToken()
     {
         return Task.FromResult<IActionResult>(Ok());
@@ -29,7 +29,7 @@ public class ControllerSecurity : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    [Route("/security/createToken")]
+    [Route(RouteConstants.UriSecurityCreateToken)]
     public async Task<IActionResult> CreateToken([FromBody] QueryAuth queryAuth,
         CancellationToken cancellationToken = default)
     {

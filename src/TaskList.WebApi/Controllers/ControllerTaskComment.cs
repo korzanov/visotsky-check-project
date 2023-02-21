@@ -8,7 +8,7 @@ namespace TaskList.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/taskComments")]
+[Route(RouteConstants.UriTaskComments)]
 public class ControllerTaskComment : ControllerBase
 {
     private readonly IMediator _mediator;

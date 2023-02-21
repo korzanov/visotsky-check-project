@@ -8,7 +8,7 @@ namespace TaskList.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/tasks")]
+[Route(RouteConstants.UriTasks)]
 public class ControllerTask : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,7 +18,7 @@ public class ControllerTask : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("list/{taskListId:guid}")]
+    [HttpGet( RouteConstants.UriTasks_List + "/{taskListId:guid}")]
     public async Task<IActionResult> GetTasksByTaskList(Guid taskListId, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new QueryTaskGetAllByTaskList(taskListId), cancellationToken);
@@ -60,7 +60,7 @@ public class ControllerTask : ControllerBase
         return CreatedAtAction(nameof(GetTask), new { id = result.Id }, result);
     }
     
-    [HttpPut("changeList")]
+    [HttpPut(RouteConstants.UriTasks_ListChange)]
     public async Task<IActionResult> ChangeTaskListOfTask([FromBody] CommandTaskChangeTaskList request,
         CancellationToken cancellationToken = default)
     {
@@ -68,7 +68,7 @@ public class ControllerTask : ControllerBase
         return CreatedAtAction(nameof(GetTask), new { id = result.Id }, result);
     }
     
-    [HttpPut("changeStatus")]
+    [HttpPut(RouteConstants.UriTasks_StatusChange)]
     public async Task<IActionResult> ChangeTaskStatus([FromBody] CommandTaskStatusRecordCreate request,
         CancellationToken cancellationToken = default)
     {

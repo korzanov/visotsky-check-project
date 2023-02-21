@@ -8,7 +8,7 @@ namespace TaskList.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/taskLists")]
+[Route(RouteConstants.UriTaskLists)]
 public class ControllerTaskList : ControllerBase
 {
     private readonly IMediator _mediator;
