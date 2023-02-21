@@ -8,7 +8,8 @@ using TaskList.Domain.Repositories;
 namespace TaskList.Services.Handlers;
 
 public class CommandHandlersTask :
-    IRequestHandler<CommandTaskCreate, ResponseTask>
+    IRequestHandler<CommandTaskCreate, ResponseTask>,
+    IRequestHandler<CommandTaskUpdate, ResponseTask>
 {
     private readonly IRepository<TaskList.Domain.Entities.Task> _taskRepository;
     private readonly IRepositoryReadOnly<TaskList.Domain.Entities.TaskList> _taskListRepository;
@@ -31,5 +32,16 @@ public class CommandHandlersTask :
         var taskToCreate = _mapper.Map<Domain.Entities.Task>(request);
         var createdTask = await _taskRepository.AddAsync(taskToCreate, cancellationToken);
         return _mapper.Map<ResponseTask>(createdTask);
+    }
+
+    public async Task<ResponseTask> Handle(CommandTaskUpdate request, CancellationToken cancellationToken)
+    {
+        var existTask = await _taskRepository.GetByIdAsync(request.Id, cancellationToken);
+        Guard.Against.NotFound(request.Id, existTask, nameof(existTask.Id));
+        var taskToUpdate = _mapper.Map<Domain.Entities.Task>(request);
+        taskToUpdate.TaskListId = existTask.TaskListId;
+        await _taskRepository.UpdateAsync(taskToUpdate, cancellationToken);
+        var updatedTask = await _taskRepository.GetByIdAsync(taskToUpdate.Id, cancellationToken);
+        return _mapper.Map<ResponseTask>(updatedTask);
     }
 }

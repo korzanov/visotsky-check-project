@@ -8,7 +8,8 @@ public class MapProfileTask : Profile
 {
     public MapProfileTask()
     {
-        CreateMap<CommandTaskCreate, TaskList.Domain.Entities.Task>();
-        CreateMap<TaskList.Domain.Entities.Task, ResponseTask>();
+        CreateMap<CommandTaskCreate, Domain.Entities.Task>();
+        CreateMap<Domain.Entities.Task, ResponseTask>();
+        CreateMap<CommandTaskUpdate, Domain.Entities.Task>();
     }
 }
