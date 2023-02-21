@@ -35,18 +35,21 @@ public class ControllerTask : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetTask(Guid id, CancellationToken cancellationToken = default)
     {
-        var response = await _mediator.Send(new QueryTaskGet(id), cancellationToken);
+        var task = await _mediator.Send(new QueryTaskGet(id), cancellationToken);
         var statusRecord = await _mediator.Send(new QueryTaskStatusRecordGetLast(id), cancellationToken);
         var comments = await _mediator.Send(new QueryTaskCommentGetAll(id), cancellationToken);
-        return Ok(new { task = response, status = statusRecord, comments });
+        return Ok(new { task = task, status = statusRecord, comments = comments });
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateTask([FromBody] CommandTaskCreate request,
         CancellationToken cancellationToken = default)
     {
-        var response = await _mediator.Send(request, cancellationToken);
-        return CreatedAtAction(nameof(GetTask), new { id = response.Id }, response);
+        var task = await _mediator.Send(request, cancellationToken);
+        var defaultStatus = await _mediator.Send(new QueryTaskStatusGetDefault(), cancellationToken);
+        var statusRecord = await _mediator.Send(new CommandTaskStatusRecordCreate(task.Id, defaultStatus.Id),
+            cancellationToken);
+        return CreatedAtAction(nameof(GetTask), new { id = task.Id }, new { task = task, status = statusRecord });
     }
 
     [HttpPut]
@@ -63,6 +66,14 @@ public class ControllerTask : ControllerBase
     {
         var result = await _mediator.Send(request, cancellationToken);
         return CreatedAtAction(nameof(GetTask), new { id = result.Id }, result);
+    }
+    
+    [HttpPut("changeStatus")]
+    public async Task<IActionResult> ChangeTaskStatus([FromBody] CommandTaskStatusRecordCreate request,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
+        return CreatedAtAction(nameof(GetTask), new { id = request.TaskId }, result);
     }
     
     [HttpDelete]

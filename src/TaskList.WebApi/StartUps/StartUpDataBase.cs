@@ -1,4 +1,6 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TaskList.Contracts.Commands;
 using TaskList.DbInfrastructure.Data;
 using TaskList.DbInfrastructure.Identity;
 
@@ -6,6 +8,13 @@ namespace TaskList.WebApi.StartUps;
 
 internal static class StartUpDataBase
 {
+    internal static async Task SeedDefaultStatuses(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(new CommandTaskStatusSetDefaults());
+    }
+    
     internal static async Task ApplyIdentityMigrations(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();

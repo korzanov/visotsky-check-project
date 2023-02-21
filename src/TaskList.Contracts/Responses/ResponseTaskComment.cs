@@ -1,3 +1,3 @@
 namespace TaskList.Contracts.Responses;
 
-public record ResponseTaskComment(Guid Id, string Message);
+public record ResponseTaskComment(Guid Id, string Message, Guid TaskId);

@@ -35,5 +35,6 @@ app.MapControllers();
 
 await StartUpDataBase.ApplyIdentityMigrations(app.Services);
 await StartUpDataBase.ApplyRepositoryMigrations(app.Services);
+await StartUpDataBase.SeedDefaultStatuses(app.Services);
 
 app.Run();
