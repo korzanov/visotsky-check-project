@@ -1,10 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using TaskList.Contracts.Queries;
 using TaskList.DbInfrastructure.Identity;
 using TaskList.WebApi.Security;
@@ -34,14 +30,15 @@ public class ControllerSecurity : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [Route("/security/createToken")]
-    public async Task<IActionResult> CreateToken([FromBody] QueryAuth queryAuth, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateToken([FromBody] QueryAuth queryAuth,
+        CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByNameAsync(queryAuth.Login);
         if (user is null)
             return Unauthorized();
-        if(!await _userManager.CheckPasswordAsync(user, queryAuth.Password))
+        if (!await _userManager.CheckPasswordAsync(user, queryAuth.Password))
             return Unauthorized("invalid password");
-        
+
         var token = _jwtConfig.CreateAndWriteToken(user.UserName);
         return Ok(token);
     }
