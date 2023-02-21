@@ -9,7 +9,8 @@ using Task = TaskList.Domain.Entities.Task;
 namespace TaskList.Services.Handlers;
 
 public class QueryHandlersTask :
-    IRequestHandler<QueryTaskGet, ResponseTask>
+    IRequestHandler<QueryTaskGet, ResponseTask>,
+    IRequestHandler<QueryTaskGetAll, IEnumerable<ResponseTask>>
 {
     private readonly IRepositoryReadOnly<Domain.Entities.Task> _repository;
     private readonly IMapper _mapper;
@@ -25,5 +26,11 @@ public class QueryHandlersTask :
         var existTask = await _repository.GetByIdAsync(request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, existTask, nameof(existTask.Id));
         return _mapper.Map<ResponseTask>(existTask);
+    }
+
+    public async Task<IEnumerable<ResponseTask>> Handle(QueryTaskGetAll request, CancellationToken cancellationToken)
+    {
+        var allTasks = await _repository.ListAsync(cancellationToken);
+        return allTasks.Select(task => _mapper.Map<ResponseTask>(task));
     }
 }
