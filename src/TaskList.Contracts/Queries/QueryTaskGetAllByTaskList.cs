@@ -3,4 +3,4 @@ using TaskList.Contracts.Responses;
 
 namespace TaskList.Contracts.Queries;
 
-public record QueryTaskGetAllByTaskList(Guid TaskListId) : IRequest<ResponseTask>;
+public record QueryTaskGetAllByTaskList(Guid TaskListId) : IRequest<IEnumerable<ResponseTask>>;
