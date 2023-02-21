@@ -106,7 +106,7 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
         var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
         var createdTask = await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
         
-        var responseTask = await _mediator.Send(new QueryTaskListGet(createdTask.Id));
+        var responseTask = await _mediator.Send(new QueryTaskGet(createdTask.Id));
         
         Assert.Equal(name, responseTask.Name);
         Assert.Equal(desc, responseTask.Description);
@@ -116,7 +116,7 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
     public async void QueryTaskGet_NotFound()
     {
         await Assert.ThrowsAsync<Ardalis.GuardClauses.NotFoundException>(async () =>
-            await _mediator.Send(new QueryTaskListGet(_notPossibleId)));
+            await _mediator.Send(new QueryTaskGet(_notPossibleId)));
     }
     
     [Fact]
@@ -125,7 +125,7 @@ public class ServiceTaskTests : IClassFixture<ServicesFixture>
         var createdTaskList = await _mediator.Send(new CommandTaskListCreate(_anyString, _anyString));
         await _mediator.Send(new CommandTaskCreate(_anyString, _anyString, createdTaskList.Id));
         
-        var responseTasks = await _mediator.Send(new QueryTaskListGetAll());
+        var responseTasks = await _mediator.Send(new QueryTaskGetAll());
         
         Assert.True(responseTasks.Any());
     }
