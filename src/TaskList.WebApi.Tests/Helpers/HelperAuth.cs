@@ -15,7 +15,7 @@ public static class HelperAuth
 
     public static async Task<HttpClient> GetAuthoredClient(WebApplicationFactory<Program> factory)
     {
-        var login = "admin";
+        var login = Guid.NewGuid().ToString();
         var password = "admin";
         var client = factory.CreateClient();
         var jsonContent = JsonContent.Create(new CommandPersonalInfoCreate(login, password));

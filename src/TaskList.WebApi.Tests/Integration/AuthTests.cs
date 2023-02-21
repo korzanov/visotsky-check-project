@@ -18,10 +18,10 @@ public class AuthTests : IClassFixture<WebApplicationFactory<Program>>
     }
     
     [Theory]
-    [InlineData("login", "password")]
-    [InlineData("admin", "admin")]
-    public async Task CreateUser(string login, string password)
+    [InlineData("Pa$$w0rd")]
+    public async Task CreateUser(string password)
     {
+        var login = Guid.NewGuid().ToString();
         var client = _factory.CreateClient();
         
         var jsonContent = JsonContent.Create(new CommandPersonalInfoCreate(login, password));
