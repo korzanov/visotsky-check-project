@@ -4,9 +4,9 @@ using TaskList.Contracts.Responses;
 
 namespace TaskList.Services.Tests.Services;
 
-public class ServiceTaskStatusTests : ClassFixture
+public class TaskStatusTests : ClassFixture
 {
-    public ServiceTaskStatusTests(ServicesFixture servicesFixture) : base(servicesFixture) {}
+    public TaskStatusTests(ServicesFixture servicesFixture) : base(servicesFixture) {}
 
     [Theory]
     [InlineData(1)]
