@@ -1,3 +1,3 @@
 namespace TaskList.Contracts.Responses;
 
-public record ResponseTaskStatusRecord(string Name);
+public record ResponseTaskStatusRecord(Guid Id, string Name);
