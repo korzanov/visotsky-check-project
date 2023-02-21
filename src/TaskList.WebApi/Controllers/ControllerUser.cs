@@ -36,7 +36,7 @@ public class ControllerUser : ControllerBase
     public async Task<IActionResult> CreateUser([FromBody] CommandPersonalInfoCreate personalInfoCreate, CancellationToken cancellationToken = default)
     {
         var user = await _mediator.Send(personalInfoCreate, cancellationToken);
-        return CreatedAtAction(nameof(ControllerUser.GetUser),  user.Login, user);
+        return CreatedAtAction(nameof(ControllerUser.GetUser),  new { login = user.Login }, user);
     }
     
     [HttpPut]
