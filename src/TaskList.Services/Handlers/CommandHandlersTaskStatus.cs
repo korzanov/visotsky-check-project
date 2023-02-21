@@ -18,25 +18,21 @@ public class CommandHandlersTaskStatus : IRequestHandler<CommandTaskStatusSetDef
         _mapper = mapper;
     }
 
-    public async Task Handle(CommandTaskStatusSetDefaults request, CancellationToken cancellationToken)
+    public Task Handle(CommandTaskStatusSetDefaults request, CancellationToken cancellationToken)
     {
         foreach (var status in ResponseTaskStatus.Defaults)
         {
-            var lockWasTaken = false;
-            try
+            lock (Sync)
             {
-                Monitor.Enter(Sync, ref lockWasTaken);
-                var existStatus = await _repository.GetByIdAsync(status.Id, cancellationToken);
+                var existStatus = _repository.GetByIdAsync(status.Id, cancellationToken).Result;
                 if (existStatus is not null)
                     continue;
                 var newStatus = _mapper.Map<Domain.Entities.TaskStatus>(status);
-                await _repository.AddAsync(newStatus, cancellationToken);
-                await _repository.SaveChangesAsync(cancellationToken);
-            }
-            finally
-            {
-                if (lockWasTaken) Monitor.Exit(Sync);
+                _repository.AddAsync(newStatus, cancellationToken).GetAwaiter();
+                _repository.SaveChangesAsync(cancellationToken).GetAwaiter();
             }
         }
+
+        return Task.CompletedTask;
     }
 }
