@@ -4,13 +4,13 @@ using TaskList.Contracts.Queries;
 
 namespace TaskList.Services.Tests.Services;
 
-public class ServiceTaskTests : IClassFixture<ServicesFixture>
+public class TaskTests : IClassFixture<ServicesFixture>
 {
     private readonly IMediator _mediator;
     private readonly Guid _notPossibleId;
     private readonly string _anyString;
 
-    public ServiceTaskTests(ServicesFixture servicesFixture)
+    public TaskTests(ServicesFixture servicesFixture)
     {
         _mediator = servicesFixture.Mediator;
         _notPossibleId = new Guid("F88C636F-EA8D-424A-887C-C5683410A6B7");
